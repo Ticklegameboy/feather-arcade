@@ -1,6 +1,6 @@
 'use strict';
 const I18n=(()=>{
- const messages={
+ const messages={"素材來源": {"en": "Asset credits", "ja": "素材の出典"}, "。原角色與遊戲美術：CAPCOM。": {"en": ". Original character and game art: CAPCOM.", "ja": "。原作キャラクター・ゲーム美術：CAPCOM。"},
 
  "滑鼠 · 搔癢攻擊": {
   "en": "MOUSE · TICKLE",
