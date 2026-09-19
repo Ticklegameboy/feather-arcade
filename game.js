@@ -7,7 +7,7 @@ ctx.imageSmoothingEnabled=false;
 const keys=new Set(),sprites=[],bg=new Image(),sheet=new Image(),bindingSheet=new Image(),bindingFrames=[],bindingLaughSheet=new Image(),bindingLaughFrames=[],mummySheet=new Image(),mummyFrames=[],mummyLaughSheet=new Image(),mummyLaughFrames=[],vineSheet=new Image(),vineFrames=[],vineLaughSheet=new Image(),vineLaughFrames=[],normalHitSheet=new Image(),normalHitFrames=[],bareBindingSheet=new Image(),bareBindingFrames=[],bareLaughSheet=new Image(),bareLaughFrames=[],bareHitSheet=new Image(),bareHitFrames=[],meleeSheet=new Image(),meleeFrames=[];
 const alleyLoop=new Image();
 let mummyLaughLayout,mummyBindingLayout,vineBindingLayout,vineLaughLayout;
-let ready=false,running=false,paused=false,sound=false,audio,clock=0,last=0,camera=0,spawnAt=1080;
+let ready=false,running=false,paused=false,sound=true,audio,clock=0,last=0,camera=0,spawnAt=1080;
 let enemies=[],shots=[],bindingShots=[],enemyShots=[],effects=[],texts=[],kills=0,world=0,combo=0,comboTime=0,shake=0;
 const FLOOR=440, BIND_DURATION=20, BIND_HEIGHT=280, BIND_LAUGH_DURATION=1.15, DEFEAT_FALL_DURATION=.65, MELEE_REACH=92, MELEE_HOLD=.48, MELEE_BEAT=.24, INTERACT_REACH=115;
 const MUMMY_HEIGHT=220,VINE_HEIGHT=344, BIND_RING_SPEED=620, BIND_RING_REACH=650, BIND_RING_RADIUS=22;
@@ -745,7 +745,7 @@ function update(dt){
  for(const p of effects){p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;}
  effects=effects.filter(p=>p.life>0);
  for(const t of texts)advanceCaption(t,dt);texts=texts.filter(t=>t.life>0);
- for(let i=0;i<3;i++)$('#cd'+i).textContent=player.cd[i]>.05?player.cd[i].toFixed(1)+'s':tr('就緒');
+ for(let i=0;i<3;i++){const label=$('#cd'+i);if(label)label.textContent=player.cd[i]>.05?player.cd[i].toFixed(1)+'s':tr('就緒');}
 }
 function text(t,x,y,size=15,color='#eee5ff',align='left'){ctx.font=`bold ${size}px "Microsoft YaHei", sans-serif`;ctx.fillStyle=color;ctx.textAlign=align;ctx.fillText(t,x,y);ctx.textAlign='left';}
 function bar(x,y,w,p,color){ctx.fillStyle='#110f20';ctx.fillRect(x-2,y-2,w+4,12);ctx.fillStyle='#3b2e48';ctx.fillRect(x,y,w,8);ctx.fillStyle=color;ctx.fillRect(x,y,w*Math.max(0,p),8);}
@@ -935,7 +935,7 @@ function refreshLanguage(){
  $('#overlay p').innerHTML=ended?tr('本次探索 {meters} 米 · 擊敗 {kills} 位對手',{meters:Math.floor(world/10),kills}):tr('點擊滑鼠，發射禁錮魔法。')+'<br>'+tr('移動羽毛滑鼠，對禁錮的敵人進行搔癢攻擊。');
  $('#start').innerHTML=ended?tr('再來一次 <span>↵</span>'):tr('開始冒險')+' <span>↵</span>';
  $('#load').textContent=tr(ended?'用禁錮打斷起手；看到波動拳時，閃避穿過。':loadFailed?'素材載入失敗，請重新整理重試':ready?'隆的戰鬥動作已就緒 · 按 Enter 開始':'正在喚醒魔法…');
- for(let i=0;i<3;i++)$('#cd'+i).textContent=player.cd[i]>.05?player.cd[i].toFixed(1)+'s':tr('就緒');
+ for(let i=0;i<3;i++){const label=$('#cd'+i);if(label)label.textContent=player.cd[i]>.05?player.cd[i].toFixed(1)+'s':tr('就緒');}
  updateInteraction();
  if(typeof Dungeon!=='undefined')Dungeon.refresh();
 }

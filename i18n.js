@@ -1,6 +1,37 @@
 'use strict';
 const I18n=(()=>{
  const messages={
+
+ "滑鼠 · 搔癢攻擊": {
+  "en": "MOUSE · TICKLE",
+  "ja": "マウス · くすぐり"
+ },
+ "羽毛搔癢": {
+  "en": "Feather tickling",
+  "ja": "羽根でくすぐる"
+ },
+ "移動羽毛，搔癢被禁錮的敵人": {
+  "en": "Move the feather to tickle bound enemies",
+  "ja": "羽根を動かして、拘束した敵をくすぐろう"
+ },
+ "左鍵 · 禁錮": {
+  "en": "LEFT CLICK · BIND",
+  "ja": "左クリック · 拘束"
+ },
+ "魔法成長": {
+  "en": "LEARN MAGIC",
+  "ja": "魔法を覚える"
+ },
+ "積累笑聲，解鎖魔法": {
+  "en": "Earn laughter, unlock magic",
+  "ja": "笑い声を集めて魔法を解放"
+ },
+ "點擊畫面右上角的笑聲，開啟魔法商店": {
+  "en": "Click Laughter at the top right to open the magic shop",
+  "ja": "画面右上の笑い声を押して、魔法ショップを開こう"
+ }
+,
+
  "我認輸！！我認輸！！": {"en":"I give up!! I give up!!","ja":"参った！！俺の負けだ！！"},
  "放開我！堂堂正正地較量！": {
   "en": "Release me! Fight me fairly!",

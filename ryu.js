@@ -1,6 +1,6 @@
 /* Original SF3 pixels and AIR timing: Umihei; source archive: Tatayecorp/demo_mugenJS. */
 const RyuAssets = {
-  assetRevision: 'prison-polish-r61',
+  assetRevision: 'tutorial-sound-r62',
   assetURL(path) { return `${path}?v=${this.assetRevision}`; },
   scale: 1.65, data: null, pages: [], shirtlessPages: [], shirtlessMap: null, clips: {},
   definitions: {
