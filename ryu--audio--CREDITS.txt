@@ -1,0 +1,20 @@
+Ryu attack voices and effects
+
+Character and original game sounds: CAPCOM.
+Sound archive and action mappings: Ryu by Phantom.of.the.Server (PotS),
+publicly shared character package dated 13 September 2026.
+Author page: https://network.mugenguild.com/pots/chars.html
+Download: https://www.mediafire.com/file/kgmvuigv69pfib1/ryu_pots.zip/file
+
+This is an alternative Ryu sound set from PotS's custom/CvS-origin character,
+not a claim that the Umihei SF III sprite source included these recordings.
+The Umihei source revision used by this game has no SND/WAV audio files.
+
+27 original RIFF/WAV samples were extracted without changing their PCM data.
+See manifest.json for archive sample IDs, source configuration references,
+durations and SHA256 hashes. tools/import-ryu-audio.py reproduces extraction.
+Source ZIP, SND, readme and referenced state files: assets/ryu-audio-source.
+
+The project's software license does not separately license CAPCOM recordings.
+
+Laughter recordings 1, 2, 3, 4, 10, 11, 12, 13.mp3: supplied by the project owner. Files 3 and 4 are byte-identical; the playback pool treats them as one sound. Original MP3 bytes preserved.
