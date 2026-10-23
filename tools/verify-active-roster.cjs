@@ -28,8 +28,8 @@ const {chromium}=require(require.resolve('playwright',{paths:[path.resolve(__dir
  await p.locator('[data-prison-binding="1"]').click();
  await p.locator('#dungeon-helmet').click();assert.equal(await p.evaluate(()=>Dungeon.prisoner.mummyUnhelmet),true);
  await p.locator('#dungeon-footwear').click();assert.equal(await p.evaluate(()=>Dungeon.prisoner.mummyFootwear),'socks');
- await p.evaluate(()=>{setFeatherContact(Dungeon.prisoner,true);Dungeon.prisoner.breakDamage=51;});
- assert.equal(await p.evaluate(()=>EnemyRoster.bindingState(Dungeon.prisoner,true).frames===EnemyRoster.mummySet(Dungeon.prisoner).laughTurn.frames),true);
+ // Assert in the same browser tick; the live pointer clears synthetic contact on the next frame.
+ assert.equal(await p.evaluate(()=>{setFeatherContact(Dungeon.prisoner,true);Dungeon.prisoner.breakDamage=51;return EnemyRoster.bindingState(Dungeon.prisoner).frames===EnemyRoster.mummySet(Dungeon.prisoner).laughTurn.frames;}),true);
  await p.locator('#dungeon-back').click();await p.locator('#dungeon-back').click();
  await p.reload();await p.evaluate(()=>assetsReady);assert.equal(await p.evaluate(()=>Dungeon.count),2);
  assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('feather-arcade.dungeon.v1')).enemies.length),5);
