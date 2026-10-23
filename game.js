@@ -56,7 +56,7 @@ const MOVES={
  tatsu:{label:'旋風腿',damage:13,windup:.32}
 };
 if(typeof EnemyRoster!=='undefined')Object.assign(MOVES,EnemyRoster.moves);
-function loadImage(im,url){return new Promise((resolve,reject)=>{im.onload=resolve;im.onerror=()=>reject(Error(tr('影象載入失敗')));im.src=RyuAssets.assetURL(url);});}
+function loadImage(im,url){if(typeof AssetLoader!=='undefined')return AssetLoader.image(im,RyuAssets.assetURL(url));return new Promise((resolve,reject)=>{im.onload=resolve;im.onerror=()=>reject(Error(tr('影象載入失敗')));im.src=RyuAssets.assetURL(url);});}
 function prepareWizard(){
  for(const [x,y,w,h] of crops){
   const c=document.createElement('canvas');c.width=w;c.height=h;
@@ -115,11 +115,13 @@ function prepareMelee(){
   g.putImageData(d,0,0);meleeFrames.push(c);
  }
 }
-const assetsReady=Promise.all([typeof EnemyRoster!=='undefined'?EnemyRoster.load():Promise.resolve(),fetch('ryu/mummy/binding-layout.json?v='+RyuAssets.assetRevision).then(r=>{if(!r.ok)throw Error('Mummy layout failed');return r.json();}).then(layout=>{mummyBindingLayout=layout;}),fetch('ryu/mummy/binding-laugh-layout.json?v='+RyuAssets.assetRevision).then(r=>{if(!r.ok)throw Error('Mummy laugh layout failed');return r.json();}).then(layout=>{mummyLaughLayout=layout;}),fetch('ryu/mummy-vine/binding-layout.json?v='+RyuAssets.assetRevision).then(r=>{if(!r.ok)throw Error('Vine layout failed');return r.json();}).then(layout=>{vineBindingLayout=layout;}),fetch('ryu/mummy-vine/binding-laugh-layout.json?v='+RyuAssets.assetRevision).then(r=>{if(!r.ok)throw Error('Vine laugh layout failed');return r.json();}).then(layout=>{vineLaughLayout=layout;}),loadImage(sheet,'actors.png'),loadImage(bg,'background/extended/entrance.png'),loadImage(alleyLoop,'background/extended/loop.png'),loadImage(bindingSheet,'ryu/binding.png'),loadImage(bindingLaughSheet,'ryu/binding-laugh.png'),loadImage(mummySheet,'ryu/mummy/binding.png'),loadImage(mummyLaughSheet,'ryu/mummy/binding-laugh.png'),loadImage(vineSheet,'ryu/mummy-vine/binding.png'),loadImage(vineLaughSheet,'ryu/mummy-vine/binding-laugh.png'),loadImage(normalHitSheet,'ryu/hit-smile.png'),loadImage(bareBindingSheet,'ryu/shirtless/binding.png'),loadImage(bareLaughSheet,'ryu/shirtless/binding-laugh.png'),loadImage(bareHitSheet,'ryu/shirtless/hit-smile.png'),loadImage(meleeSheet,'wizard-melee.png'),RyuAssets.load()]).then(async()=>{
+const assetsReady=Promise.all([typeof EnemyRoster!=='undefined'?EnemyRoster.load():Promise.resolve(),(typeof AssetLoader!=='undefined'?AssetLoader.json('ryu/mummy/binding-layout.json?v='+RyuAssets.assetRevision):fetch('ryu/mummy/binding-layout.json?v='+RyuAssets.assetRevision).then(r=>r.json())).then(layout=>{mummyBindingLayout=layout;}),(typeof AssetLoader!=='undefined'?AssetLoader.json('ryu/mummy/binding-laugh-layout.json?v='+RyuAssets.assetRevision):fetch('ryu/mummy/binding-laugh-layout.json?v='+RyuAssets.assetRevision).then(r=>r.json())).then(layout=>{mummyLaughLayout=layout;}),(typeof AssetLoader!=='undefined'?AssetLoader.json('ryu/mummy-vine/binding-layout.json?v='+RyuAssets.assetRevision):fetch('ryu/mummy-vine/binding-layout.json?v='+RyuAssets.assetRevision).then(r=>r.json())).then(layout=>{vineBindingLayout=layout;}),(typeof AssetLoader!=='undefined'?AssetLoader.json('ryu/mummy-vine/binding-laugh-layout.json?v='+RyuAssets.assetRevision):fetch('ryu/mummy-vine/binding-laugh-layout.json?v='+RyuAssets.assetRevision).then(r=>r.json())).then(layout=>{vineLaughLayout=layout;}),loadImage(sheet,'actors.png'),loadImage(bg,'background/extended/entrance.png'),loadImage(alleyLoop,'background/extended/loop.png'),loadImage(bindingSheet,'ryu/binding.png'),loadImage(bindingLaughSheet,'ryu/binding-laugh.png'),loadImage(mummySheet,'ryu/mummy/binding.png'),loadImage(mummyLaughSheet,'ryu/mummy/binding-laugh.png'),loadImage(vineSheet,'ryu/mummy-vine/binding.png'),loadImage(vineLaughSheet,'ryu/mummy-vine/binding-laugh.png'),loadImage(normalHitSheet,'ryu/hit-smile.png'),loadImage(bareBindingSheet,'ryu/shirtless/binding.png'),loadImage(bareLaughSheet,'ryu/shirtless/binding-laugh.png'),loadImage(bareHitSheet,'ryu/shirtless/hit-smile.png'),loadImage(meleeSheet,'wizard-melee.png'),RyuAssets.load()]).then(async()=>{
+ if(document.readyState==='loading')await new Promise(resolve=>document.addEventListener('DOMContentLoaded',resolve,{once:true}));
+ if(typeof AssetLoader!=='undefined'&&AssetLoader.state.error)throw AssetLoader.state.error;
  if(typeof CursorTools!=='undefined')await CursorTools.ready;
- prepareWizard();prepareBinding();prepareBinding(bindingLaughSheet,bindingLaughFrames);prepareMummy(mummySheet,mummyFrames,mummyBindingLayout);prepareMummy(mummyLaughSheet,mummyLaughFrames,mummyLaughLayout);prepareMummy(vineSheet,vineFrames,vineBindingLayout);prepareMummy(vineLaughSheet,vineLaughFrames,vineLaughLayout);prepareNormalHit();prepareBinding(bareBindingSheet,bareBindingFrames);prepareBinding(bareLaughSheet,bareLaughFrames);prepareNormalHit(bareHitSheet,bareHitFrames);prepareMelee();ready=true;$('#start').disabled=false;
+ prepareWizard();prepareBinding();prepareBinding(bindingLaughSheet,bindingLaughFrames);prepareMummy(mummySheet,mummyFrames,mummyBindingLayout);prepareMummy(mummyLaughSheet,mummyLaughFrames,mummyLaughLayout);prepareMummy(vineSheet,vineFrames,vineBindingLayout);prepareMummy(vineLaughSheet,vineLaughFrames,vineLaughLayout);prepareNormalHit();prepareBinding(bareBindingSheet,bareBindingFrames);prepareBinding(bareLaughSheet,bareLaughFrames);prepareNormalHit(bareHitSheet,bareHitFrames);prepareMelee();if(typeof AssetLoader!=='undefined')AssetLoader.complete();ready=true;$('#start').disabled=false;
  $('#load').textContent=tr(typeof EnemyRoster!=='undefined'?'兩位對手已就緒 · 按 Enter 開始':'隆的戰鬥動作已就緒 · 按 Enter 開始');if(typeof Dungeon!=='undefined')Dungeon.refresh();
-}).catch(error=>{console.error(error);loadFailed=true;$('#load').textContent=tr('素材載入失敗，請重新整理重試');});
+}).catch(error=>{console.error(error);loadFailed=true;if(typeof AssetLoader!=='undefined')AssetLoader.fail(error);else $('#load').textContent=tr('素材載入失敗，請重新整理重試');});
 $('#start').disabled=true;
 function tone(f=440,t=.09,type='sine',vol=.06){
  if(!sound)return;
@@ -862,6 +864,7 @@ function update(dt){
  for(const p of effects){p.x+=p.vx*dt;p.y+=p.vy*dt;p.life-=dt;}
  effects=effects.filter(p=>p.life>0);
  for(const t of texts)advanceCaption(t,dt);texts=texts.filter(t=>t.life>0);
+ if(!ready&&typeof AssetLoader!=='undefined')AssetLoader.render();
  for(let i=0;i<3;i++){const label=$('#cd'+i);if(label)label.textContent=player.cd[i]>.05?player.cd[i].toFixed(1)+'s':tr('就緒');}
 }
 function text(t,x,y,size=15,color='#eee5ff',align='left'){ctx.font=`bold ${size}px "Microsoft YaHei", sans-serif`;ctx.fillStyle=color;ctx.textAlign=align;ctx.fillText(t,x,y);ctx.textAlign='left';}
@@ -1057,6 +1060,7 @@ function refreshLanguage(){
  $('#overlay p').innerHTML=ended?tr('本次探索 {meters} 米 · 擊敗 {kills} 位對手',{meters:Math.floor(world/10),kills}):tr('點擊滑鼠，發射禁錮魔法。')+'<br>'+tr('移動羽毛滑鼠，對禁錮的敵人進行搔癢攻擊。');
  $('#start').innerHTML=ended?tr('再來一次 <span>↵</span>'):tr('開始冒險')+' <span>↵</span>';
  $('#load').textContent=tr(ended?'用禁錮打斷起手；看到波動拳時，閃避穿過。':loadFailed?'素材載入失敗，請重新整理重試':ready?'兩位對手已就緒 · 按 Enter 開始':'正在喚醒魔法…');
+ if(!ready&&typeof AssetLoader!=='undefined')AssetLoader.render();
  for(let i=0;i<3;i++){const label=$('#cd'+i);if(label)label.textContent=player.cd[i]>.05?player.cd[i].toFixed(1)+'s':tr('就緒');}
  updateInteraction();
  if(typeof Dungeon!=='undefined')Dungeon.refresh();

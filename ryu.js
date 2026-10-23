@@ -18,9 +18,7 @@ const RyuAssets = {
     victory:[181], intro:[191], fireball:[1011], fireballEnd:[1015]
   },
   async load() {
-    const response = await fetch('ryu/animations.json');
-    if (!response.ok) throw Error('隆的動作資料載入失敗');
-    this.data = await response.json();
+    this.data = await (typeof AssetLoader!=='undefined'?AssetLoader.json('ryu/animations.json'):fetch('ryu/animations.json').then(r=>r.json()));
     const needed = new Set();
     for (const [name,ids] of Object.entries(this.definitions)) {
       const frames=[];
@@ -36,16 +34,14 @@ const RyuAssets = {
       }
       this.clips[name]={frames,ticks:frames.reduce((sum,f)=>sum+f.ticks,0)};
     }
-    await Promise.all([...needed].map(page=>new Promise((resolve,reject)=>{
+    await Promise.all([...needed].map(page=>typeof AssetLoader!=='undefined'?AssetLoader.image(new Image(),`ryu/atlas-${page}.png`).then(im=>{this.pages[page]=im;}):new Promise((resolve,reject)=>{
       const image=new Image();image.onload=()=>{this.pages[page]=image;resolve();};
       image.onerror=()=>reject(Error('隆的精靈頁載入失敗'));image.src=`ryu/atlas-${page}.png`;
     })));
-    const costumes=await fetch(this.assetURL('ryu/shirtless/manifest.json'));
-    if(!costumes.ok)throw Error('外觀資料載入失敗');
-    this.shirtlessMap=await costumes.json();
+    this.shirtlessMap=await (typeof AssetLoader!=='undefined'?AssetLoader.json(this.assetURL('ryu/shirtless/manifest.json')):fetch(this.assetURL('ryu/shirtless/manifest.json')).then(r=>r.json()));
     await Promise.all(Array.from({length:this.shirtlessMap.sheets},(_,i)=>new Promise((resolve,reject)=>{
       const im=new Image();im.onerror=()=>reject(Error('外觀精靈載入失敗'));
-      im.onload=()=>{
+      const prepare=()=>{
         const layout=this.shirtlessMap.layouts[i];
         const density=this.shirtlessMap.textureScale||1;
         const c=document.createElement('canvas');c.width=layout.cols*this.shirtlessMap.cell*density;c.height=layout.rows*this.shirtlessMap.cell*density;
@@ -56,7 +52,7 @@ const RyuAssets = {
           g.putImageData(d,0,0);
         }
         this.shirtlessPages[i]=c;resolve();
-      };im.src=this.assetURL(`ryu/shirtless/combat-${i}.png`);
+      };if(typeof AssetLoader!=='undefined')AssetLoader.image(im,this.assetURL(`ryu/shirtless/combat-${i}.png`)).then(()=>{try{prepare();}catch(error){reject(error);}},reject);else {im.onload=prepare;im.src=this.assetURL(`ryu/shirtless/combat-${i}.png`);}
     })));
     return this;
   },

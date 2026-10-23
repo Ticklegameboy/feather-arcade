@@ -81,3 +81,5 @@
 
 #feather-cursor canvas{position:absolute;left:18px;top:22px;width:72px;height:72px;transform-origin:50% 50%;transform:translate(-50%,-50%) translateY(var(--feather-lift,0px)) rotate(var(--feather-angle,0deg))}
 #cursor-tools canvas{width:33px;height:33px}
+
+#load{display:block;overflow-wrap:anywhere;max-width:38em}#load-retry{margin:8px 0;padding:7px 15px;border:1px solid #b79bd4;background:#30243e;color:#fff;border-radius:6px;cursor:pointer}

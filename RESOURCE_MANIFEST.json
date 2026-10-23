@@ -1,10 +1,15 @@
 {
-  "version": "r88",
+  "version": "r89",
   "files": [
     {
       "path": "actors.png",
       "bytes": 1528866,
       "sha256": "b58539b75f01d5da349fa6a7a083d2f94e1ce150d88d6724f35da6ed3d6eb609"
+    },
+    {
+      "path": "asset-loader.js",
+      "bytes": 2819,
+      "sha256": "a6ea36c821a55e0df928ba15eeca563eff6f6256cb8d0c0a91159ecee640c9bc"
     },
     {
       "path": "background/CREDITS.txt",
@@ -33,13 +38,18 @@
     },
     {
       "path": "cursor-tools.js",
-      "bytes": 5638,
-      "sha256": "763b1ff1cc6b8fa11d819c8a6edd3dd464283ac573b4f29f57a3133a7262fcf0"
+      "bytes": 5908,
+      "sha256": "801b0a63d48173ba3a9f665bc111804b7a1cd6501b8c4aaed15ba98bf91432cc"
     },
     {
       "path": "dungeon.js",
       "bytes": 15842,
       "sha256": "7f14e44a8d1cebda4952bd53b7accc0f3757d396bfce76fb939e1ffba2961af4"
+    },
+    {
+      "path": "fighters.js",
+      "bytes": 15855,
+      "sha256": "50e6c9d6ef9d2b9bb36aef19851a1008f998125851acb60a5426fa74f38e6d43"
     },
     {
       "path": "fighters/red-ranger/animations.json",
@@ -277,24 +287,19 @@
       "sha256": "be98f8d785cdbfa41b7d8774b7ac90b97e530e22c3af8de2c7bda1f0d714ba0b"
     },
     {
-      "path": "fighters.js",
-      "bytes": 15745,
-      "sha256": "d238f9e1efd7110997c09203f8f4879eff6509ee99a5e3cabc756acff131450e"
-    },
-    {
       "path": "game.js",
-      "bytes": 67864,
-      "sha256": "2c586b631f822f02b7dad6cf89d8c9f06adb6bbfff5a937baadcab6cf8c0a0bc"
+      "bytes": 68683,
+      "sha256": "70b82a6b79c90ad2a31a1d3209a127cef290636bf14a0fb0fee0233f66a7b1b9"
     },
     {
       "path": "i18n.js",
-      "bytes": 42101,
-      "sha256": "40c839cf56248216df9158de3719aed1a66c39ebde7eab1b8c3f465eff5b9b24"
+      "bytes": 42851,
+      "sha256": "aaeca32738514505d22658ce343f2c0d80825070de62768e892704574928a8f7"
     },
     {
       "path": "index.html",
-      "bytes": 8946,
-      "sha256": "489579912d8196fa287dcd0ec68b038e9e70c4f22a9a1e20ae8519a581d9bb0e"
+      "bytes": 9725,
+      "sha256": "934a7f063d0cedce73de78e43cbaf6fdbebfedfee6f51cc85bd895ed911ea482"
     },
     {
       "path": "laughter.js",
@@ -310,6 +315,21 @@
       "path": "onboarding.js",
       "bytes": 2556,
       "sha256": "a516a882a577ebebfb8385e827323b13ca242bb80226b7c12209a72cc157702d"
+    },
+    {
+      "path": "ryu-audio.js",
+      "bytes": 5461,
+      "sha256": "f937fa920ecd8f36b13cc895c14cb9ef0418f9b136ca90eeb207973b53c19025"
+    },
+    {
+      "path": "ryu.js",
+      "bytes": 5718,
+      "sha256": "d27b3b3af8062c2c12f278a6bdf4de87565b9130a84e9fb3536549e3e902f79c"
+    },
+    {
+      "path": "ryu/CREDITS.txt",
+      "bytes": 3806,
+      "sha256": "064e27b1d172b94d0a8ca55c3f12bf06cdcb01af46f2b4183d25a84880e2911c"
     },
     {
       "path": "ryu/animations.json",
@@ -547,34 +567,9 @@
       "sha256": "0d26ee1b1e2750b207a2f9cb6280b1944aaee9c41271ef6a8eed71284e698732"
     },
     {
-      "path": "ryu/CREDITS.txt",
-      "bytes": 3806,
-      "sha256": "064e27b1d172b94d0a8ca55c3f12bf06cdcb01af46f2b4183d25a84880e2911c"
-    },
-    {
       "path": "ryu/hit-smile.png",
       "bytes": 1329044,
       "sha256": "0fda2fb333e5ff94fb5dd5c50031f93206ecdfc52bc73a151713e1f22483344d"
-    },
-    {
-      "path": "ryu/mummy/binding-laugh-layout.json",
-      "bytes": 760,
-      "sha256": "ba2c4df5c96df13bc23fee1efc01ff2a19692447ee4fcf90c358592e12960f14"
-    },
-    {
-      "path": "ryu/mummy/binding-laugh.png",
-      "bytes": 1375340,
-      "sha256": "9dea44367f57223566d720d79cec320d1c4c48722bba3562c500eeec4f83abe3"
-    },
-    {
-      "path": "ryu/mummy/binding-layout.json",
-      "bytes": 848,
-      "sha256": "ff4858d217c5899a024ae54ac7d4b2b6f9503397091b127e806e2d99d2d30a91"
-    },
-    {
-      "path": "ryu/mummy/binding.png",
-      "bytes": 984140,
-      "sha256": "d05f38009b38b1840d2480c38b0edbe3015d9853da7445c04ebe4b58d4346447"
     },
     {
       "path": "ryu/mummy-vine/binding-laugh-layout.json",
@@ -595,6 +590,26 @@
       "path": "ryu/mummy-vine/binding.png",
       "bytes": 2410531,
       "sha256": "81d76460920b2785d10755e87421aa11595c96ad9dac84b48e2068139fa74ff0"
+    },
+    {
+      "path": "ryu/mummy/binding-laugh-layout.json",
+      "bytes": 760,
+      "sha256": "ba2c4df5c96df13bc23fee1efc01ff2a19692447ee4fcf90c358592e12960f14"
+    },
+    {
+      "path": "ryu/mummy/binding-laugh.png",
+      "bytes": 1375340,
+      "sha256": "9dea44367f57223566d720d79cec320d1c4c48722bba3562c500eeec4f83abe3"
+    },
+    {
+      "path": "ryu/mummy/binding-layout.json",
+      "bytes": 848,
+      "sha256": "ff4858d217c5899a024ae54ac7d4b2b6f9503397091b127e806e2d99d2d30a91"
+    },
+    {
+      "path": "ryu/mummy/binding.png",
+      "bytes": 984140,
+      "sha256": "d05f38009b38b1840d2480c38b0edbe3015d9853da7445c04ebe4b58d4346447"
     },
     {
       "path": "ryu/shirtless/binding-laugh.png",
@@ -647,19 +662,9 @@
       "sha256": "471252abb5ae03135c9e1ba89c2b47925df5c641e68241af97e6da0eeacd6740"
     },
     {
-      "path": "ryu-audio.js",
-      "bytes": 5461,
-      "sha256": "f937fa920ecd8f36b13cc895c14cb9ef0418f9b136ca90eeb207973b53c19025"
-    },
-    {
-      "path": "ryu.js",
-      "bytes": 5411,
-      "sha256": "493e5ae9e368eff22e087a31ba6d9ef4332cc0aa1c2bb8031bdc58bc29b9dbe9"
-    },
-    {
       "path": "style.css",
-      "bytes": 21020,
-      "sha256": "a6d7ab966cea61b97a9f5b2ddf9aba585129af3d1f846427cf5172dfb44d458a"
+      "bytes": 21212,
+      "sha256": "dd5a5ec35505c842dd165592f9b1fdc842eb8a9a073cc51d21d269eaab178a44"
     },
     {
       "path": "wizard-melee.png",

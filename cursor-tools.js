@@ -7,7 +7,9 @@ const CursorTools=(()=>{
  const rendered=document.createElement('canvas');rendered.width=rendered.height=104;cursor.width=cursor.height=72;
  let previous='',time=0,previousTime=performance.now();
  const ghostImage=new Image();let ghost=null;
- const ready=Promise.all([fetch('cursor-art/ghost-hand-a1.json?v=ghost-a1-r79').then(r=>{if(!r.ok)throw Error('A1 frame data failed');return r.json();}),new Promise((resolve,reject)=>{ghostImage.onload=resolve;ghostImage.onerror=()=>reject(Error('A1 sprite failed'));ghostImage.src='cursor-art/ghost-hand-a1.png?v=ghost-a1-r79';})]).then(([data])=>{ghost=data;previous='';});
+ const ready=(typeof AssetLoader!=='undefined'?Promise.all([AssetLoader.json('cursor-art/ghost-hand-a1.json?v=ghost-a1-r79'),AssetLoader.image(ghostImage,'cursor-art/ghost-hand-a1.png?v=ghost-a1-r79')]).then(([data])=>{ghost=data;previous='';}):Promise.all([fetch('cursor-art/ghost-hand-a1.json?v=ghost-a1-r79').then(r=>{if(!r.ok)throw Error('A1 frame data failed');return r.json();}),new Promise((resolve,reject)=>{ghostImage.onload=resolve;ghostImage.onerror=()=>reject(Error('A1 sprite failed'));ghostImage.src='cursor-art/ghost-hand-a1.png?v=ghost-a1-r79';})]).then(([data])=>{ghost=data;previous='';}));
+ ready.catch(()=>{}); // assetsReady reports failure; avoid an early unhandled rejection.
+
  function ghostFrame(t){let elapsed=((t*1000)%ghost.duration+ghost.duration)%ghost.duration;for(let i=0;i<ghost.frames.length;i++){elapsed-=ghost.frames[i].duration;if(elapsed<0)return i;}return 0;}
 
  function paint(g,id,t){

@@ -46,21 +46,21 @@ const EnemyRoster=(()=>{
  const order=['ryu','red-ranger'];
  const isEnabled=kind=>order.includes(typeof kind==='string'?kind:kind?.kind);
  const activeEntries=()=>Object.entries(roster).filter(([kind])=>isEnabled(kind));let spawnIndex=0;
- const image=url=>new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(Error('Enemy image failed: '+url));im.src=url+'?v='+(url.includes('binding-unhelmet-')?'red-default-r87':/^fighters\/red-ranger\/mummy\/unhelmet\/(boots|socks|bare)\/laugh(?:-still)?\.png$/.test(url)?'red-neck-r83':'red-normal-r72');});
+ const json=url=>typeof AssetLoader!=='undefined'?AssetLoader.json(url):fetch(url).then(r=>{if(!r.ok)throw Error('Asset data: '+url);return r.json();});
+ const image=url=>{const revision=url.includes('binding-unhelmet-')?'red-default-r87':/^fighters\/red-ranger\/mummy\/unhelmet\/(boots|socks|bare)\/laugh(?:-still)?\.png$/.test(url)?'red-neck-r83':'red-normal-r72';if(typeof AssetLoader!=='undefined')return AssetLoader.image(new Image(),url+'?v='+revision);return new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(Error('Enemy image failed: '+url));im.src=url+'?v='+(url.includes('binding-unhelmet-')?'red-default-r87':/^fighters\/red-ranger\/mummy\/unhelmet\/(boots|socks|bare)\/laugh(?:-still)?\.png$/.test(url)?'red-neck-r83':'red-normal-r72');});};
  async function loadMummy(base,folder='mummy',states=['normal','laugh']){
   const result={};
-  for(const state of states){
-   const response=await fetch(base+folder+'/'+state+'.json?v=red-normal-r72');if(!response.ok)throw Error('Mummy layout: '+base+state);
-   const layout=await response.json(),sheet=await image(base+folder+'/'+state+'.png'),frames=[];
+  await Promise.all(states.map(async state=>{
+   const [layout,sheet]=await Promise.all([json(base+folder+'/'+state+'.json?v=red-normal-r72'),image(base+folder+'/'+state+'.png')]),frames=[];
    if(sheet.width!==layout.width*layout.columns||sheet.height!==layout.height*Math.ceil(layout.count/layout.columns))throw Error('Mummy sheet/layout mismatch: '+base+state);
    for(let i=0;i<layout.count;i++){const f=document.createElement('canvas');f.width=layout.width;f.height=layout.height;f.getContext('2d').drawImage(sheet,i%layout.columns*f.width,Math.floor(i/layout.columns)*f.height,f.width,f.height,0,0,f.width,f.height);frames.push(f);}
    result[state]={frames,layout};
-  }
+  }));
   return result;
  }
  async function load(){await Promise.all(activeEntries().map(async([kind,c])=>{
-  const base='fighters/'+kind+'/';const response=await fetch(base+'animations.json');if(!response.ok)throw Error('Enemy data: '+kind);
-  const a={data:await response.json(),scale:c.scale,pages:[],clips:{},frame:RyuAssets.frame,duration:RyuAssets.duration,draw:RyuAssets.draw,boxes:RyuAssets.boxes};
+  const base='fighters/'+kind+'/';const data=await json(base+'animations.json');
+  const a={data,scale:c.scale,pages:[],clips:{},frame:RyuAssets.frame,duration:RyuAssets.duration,draw:RyuAssets.draw,boxes:RyuAssets.boxes};
   const needed=new Set();
   for(const [name,ids] of Object.entries({...common,...c.definitions})){
    const frames=[];
@@ -71,19 +71,19 @@ const EnemyRoster=(()=>{
    a.clips[name]={frames,ticks:frames.reduce((n,f)=>n+f.ticks,0)};
   }
   await Promise.all([...needed].map(async n=>{a.pages[n]=await image(base+'atlas-'+n+'.png');}));
-  const binding=await image(base+'binding.png'),layout=await fetch(base+'binding.json').then(r=>r.json());
+  const [binding,layout]=await Promise.all([image(base+'binding.png'),json(base+'binding.json')]);
   c.binding=[];c.bindingLayout=layout;
   for(let i=0;i<4;i++){const f=document.createElement('canvas');f.width=layout.width;f.height=layout.height;f.getContext('2d').drawImage(binding,i%2*f.width,Math.floor(i/2)*f.height,f.width,f.height,0,0,f.width,f.height);c.binding.push(f);}
   if(kind==='red-ranger'){
    c.bindingUnhelmet={};c.bindingUnhelmetLayouts={};
    for(const state of ['normal','laugh']){const sheet=await image(base+'binding-unhelmet-'+state+'.png'),frames=[];
     if(sheet.width!==layout.width*2||sheet.height!==layout.height*2)throw Error('Red default unhelmet layout mismatch');
-    for(let i=0;i<4;i++){const f=document.createElement('canvas');f.width=layout.width;f.height=layout.height;f.getContext('2d').drawImage(sheet,i%2*f.width,Math.floor(i/2)*f.height,f.width,f.height,0,0,f.width,f.height);frames.push(f);}c.bindingUnhelmet[state]=frames;c.bindingUnhelmetLayouts[state]=await fetch(base+'binding-unhelmet-'+state+'.json?v=red-default-r87').then(r=>r.json());
+    for(let i=0;i<4;i++){const f=document.createElement('canvas');f.width=layout.width;f.height=layout.height;f.getContext('2d').drawImage(sheet,i%2*f.width,Math.floor(i/2)*f.height,f.width,f.height,0,0,f.width,f.height);frames.push(f);}c.bindingUnhelmet[state]=frames;c.bindingUnhelmetLayouts[state]=await json(base+'binding-unhelmet-'+state+'.json?v=red-default-r87');
    }
   }
   if(c.hasMummy)c.mummy=await loadMummy(base);
-  if(kind==='red-ranger'){c.mummyFootwear={bare:c.mummy};c.mummyUnhelmet={};for(const outfit of ['boots','socks'])c.mummyFootwear[outfit]=await loadMummy(base,'mummy/'+outfit);for(const outfit of ['boots','socks','bare']){const folder='mummy/unhelmet/'+outfit,set=await loadMummy(base,folder),still=await loadMummy(base,folder,['laugh-still']);set.laughTurn=set.laugh;set.laugh=still['laugh-still'];c.mummyUnhelmet[outfit]=set;}}
-  c.assets=a;c.audio=await fetch(base+'audio/manifest.json').then(r=>r.json());
+  if(kind==='red-ranger'){c.mummyFootwear={bare:c.mummy};c.mummyUnhelmet={};await Promise.all([...['boots','socks'].map(async outfit=>{c.mummyFootwear[outfit]=await loadMummy(base,'mummy/'+outfit);}),...['boots','socks','bare'].map(async outfit=>{const folder='mummy/unhelmet/'+outfit,set=await loadMummy(base,folder,['normal','laugh','laugh-still']);set.laughTurn=set.laugh;set.laugh=set['laugh-still'];c.mummyUnhelmet[outfit]=set;})]);}
+  c.assets=a;c.audio=await json(base+'audio/manifest.json');
  }));}
  function get(e){return roster[typeof e==='string'?e:e?.kind]||null;}
  function assets(e){return get(e)?.assets||RyuAssets;}
