@@ -1,12 +1,12 @@
-/* PotS Ryu samples and user-provided laughter. See ryu--audio--CREDITS.txt. */
+/* PotS Ryu samples and user-provided laughter. See ryu/audio/CREDITS.txt. */
 const RyuAudio={
  context:null,enabled:false,buffers:new Map(),active:new Set(),loading:null,reactions:new Map(),laughIds:[],laughHistory:[],
  init(context,revision){
   this.context=context;if(this.loading)return this.loading;
   const url=path=>`${path}?v=${revision}`;
-  this.loading=fetch(url('ryu--audio--manifest.json')).then(r=>{if(!r.ok)throw Error('Ryu audio manifest');return r.json();}).then(async manifest=>{
+  this.loading=fetch(url('ryu/audio/manifest.json')).then(r=>{if(!r.ok)throw Error('Ryu audio manifest');return r.json();}).then(async manifest=>{
    await Promise.all(Object.entries(manifest.sounds).map(async([id,entry])=>{
-    try{const r=await fetch(url('ryu--audio--'+entry.file));if(!r.ok)return;this.buffers.set(id,await context.decodeAudioData(await r.arrayBuffer()));}catch{}
+    try{const r=await fetch(url('ryu/audio/'+entry.file));if(!r.ok)return;this.buffers.set(id,await context.decodeAudioData(await r.arrayBuffer()));}catch{}
    }));
    const hashes=new Set();this.laughIds=Object.entries(manifest.sounds).filter(([id,e])=>{if(!id.startsWith('laugh-')||!this.buffers.has(id)||hashes.has(e.sha256))return false;hashes.add(e.sha256);return true;}).map(([id])=>id);
   }).catch(()=>{});return this.loading;

@@ -1,0 +1,383 @@
+{
+  "sourcePage": "https://network.mugenguild.com/pots/chars.html",
+  "downloadPage": "https://www.mediafire.com/file/kgmvuigv69pfib1/ryu_pots.zip/file",
+  "author": "Phantom.of.the.Server (PotS)",
+  "character": "Ryu (normal mode)",
+  "sourceSoundSHA256": "65a1b8df3f4eab2e5dba943ba58957eb2a402527d806d907261b834fde4a7d54",
+  "sourceRecordCount": 211,
+  "sounds": {
+    "swing-1": {
+      "file": "swing-1.wav",
+      "snd": [
+        1,
+        1
+      ],
+      "duration": 0.2514,
+      "sampleRate": 11025,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "125ac1f5857e48bfc8acc81431c20fbd329e7714b554130ce0b48cf926149d7c"
+    },
+    "swing-2": {
+      "file": "swing-2.wav",
+      "snd": [
+        1,
+        2
+      ],
+      "duration": 0.2971,
+      "sampleRate": 11025,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "382c89678f0db12e84267b8344036bf6e82bc08bf1188380b5f4f0547832ff14"
+    },
+    "swing-3": {
+      "file": "swing-3.wav",
+      "snd": [
+        1,
+        3
+      ],
+      "duration": 0.3987,
+      "sampleRate": 11025,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "38bf85b275007e639d952b8b766f39c8245c095c3e7356f1da5061e0eead8668"
+    },
+    "swing-4": {
+      "file": "swing-4.wav",
+      "snd": [
+        1,
+        4
+      ],
+      "duration": 0.3149,
+      "sampleRate": 11025,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "2eb4bfd7000c51bf503fd8fbdc7b31a255a2a29f1a9c223cb6dab471787971f3"
+    },
+    "swing-5": {
+      "file": "swing-5.wav",
+      "snd": [
+        1,
+        5
+      ],
+      "duration": 0.3733,
+      "sampleRate": 11025,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "bf00eecf23c781cb30a4b8c6ab04443b8a5002ee158d14db88a6cb37ce95917f"
+    },
+    "swing-6": {
+      "file": "swing-6.wav",
+      "snd": [
+        1,
+        6
+      ],
+      "duration": 0.4648,
+      "sampleRate": 11025,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "62155b2e536b39e733d0347f954f4ff836650245dbb9a499e695b775f617b6ad"
+    },
+    "impact-1": {
+      "file": "impact-1.wav",
+      "snd": [
+        2,
+        1
+      ],
+      "duration": 0.8889,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "1375bf0becc4f03936c1d1f78ff42f8a13b13c537f2fbb36b40ef64eb6c5d8cc"
+    },
+    "impact-2": {
+      "file": "impact-2.wav",
+      "snd": [
+        2,
+        2
+      ],
+      "duration": 1.0197,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "5cadf8998d4fc39871dfc27510dd6f701daf4d5618799029214cf5da5aab2ff0"
+    },
+    "impact-3": {
+      "file": "impact-3.wav",
+      "snd": [
+        2,
+        3
+      ],
+      "duration": 1.0324,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "6273c2a55a8127f05ad46104248bbf033291006cc961b4a78ba35ec91836d2e6"
+    },
+    "impact-4": {
+      "file": "impact-4.wav",
+      "snd": [
+        2,
+        4
+      ],
+      "duration": 0.8635,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "8006d6a165d05975cbaf5584b8d645725616b4b1449b8f334b006e6547de123b"
+    },
+    "impact-5": {
+      "file": "impact-5.wav",
+      "snd": [
+        2,
+        5
+      ],
+      "duration": 1.1365,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "373d7d4f6ae477cb617d23be367f4f334e6687cac9b07d2eb9f7f07b9ea3b5be"
+    },
+    "impact-6": {
+      "file": "impact-6.wav",
+      "snd": [
+        2,
+        6
+      ],
+      "duration": 1.3803,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "b7e43356d106fafa7f7863d1f005a5a35d579c29bba39a3fb98a8637097ba2bc"
+    },
+    "impact-7": {
+      "file": "impact-7.wav",
+      "snd": [
+        2,
+        7
+      ],
+      "duration": 1.124,
+      "sampleRate": 16000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "d832b1e32bc3568abf00403ede7d92858258e55b58fc4ca7d274c50225e35a3c"
+    },
+    "grunt-0": {
+      "file": "grunt-0.wav",
+      "snd": [
+        3,
+        0
+      ],
+      "duration": 0.1526,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "2968da6d76100ade6d736f5401333ce33e5a4d6a7f5fdd4833abd63b0f1dd01e"
+    },
+    "grunt-1": {
+      "file": "grunt-1.wav",
+      "snd": [
+        3,
+        1
+      ],
+      "duration": 0.271,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "2694287a0fcf17be591beb3c99b9c9911ee0e9e6a6f1571d5919f820f6e2285a"
+    },
+    "grunt-2": {
+      "file": "grunt-2.wav",
+      "snd": [
+        3,
+        2
+      ],
+      "duration": 0.3524,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "9870cf8762b3a455f1b6252a2f4ad5d1916ef4a80fa15516dc3f8403dbab47ce"
+    },
+    "hadouken": {
+      "file": "hadouken.wav",
+      "snd": [
+        4,
+        0
+      ],
+      "duration": 0.5806,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "6939a8bdd73e888850c599c1962ab1e00e49b4000b69b9efbae954fe9c124e8a"
+    },
+    "shoryuken": {
+      "file": "shoryuken.wav",
+      "snd": [
+        4,
+        1
+      ],
+      "duration": 0.6814,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "5f8b11e36de0558e876a6a42f67cc12bf7ea0e5932f42a8145d60693abed382a"
+    },
+    "tatsumaki": {
+      "file": "tatsumaki.wav",
+      "snd": [
+        4,
+        2
+      ],
+      "duration": 1.0121,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "542b418023d367d011c0fb32d526a5110c8b4b33e0f50c2e3e839dda5d70550d"
+    },
+    "hadouken-launch": {
+      "file": "hadouken-launch.wav",
+      "snd": [
+        6,
+        0
+      ],
+      "duration": 1.0585,
+      "sampleRate": 22050,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "f15f6c0cfa659f44587d64d93f3e07807c1abb85faaa5014567019c363586194"
+    },
+    "hit-1": {
+      "file": "hit-1.wav",
+      "snd": [
+        5000,
+        0
+      ],
+      "duration": 0.2883,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "39abedc6bf58160684c318f645abe1cb6fcd8d06b7028aa9e74986ec76f1a61e"
+    },
+    "hit-2": {
+      "file": "hit-2.wav",
+      "snd": [
+        5000,
+        1
+      ],
+      "duration": 0.259,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "a9c812be393681a894ad0baf5ac99b7d6acad87111a97e2d68497856db5d838d"
+    },
+    "hit-3": {
+      "file": "hit-3.wav",
+      "snd": [
+        5000,
+        2
+      ],
+      "duration": 0.4222,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "61d9b37a04def5a3ba2612f0e079cc8e294a688eead5899786109f4884574201"
+    },
+    "hit-4": {
+      "file": "hit-4.wav",
+      "snd": [
+        5000,
+        3
+      ],
+      "duration": 0.4865,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "cc85deaca25a2a1a0b55bd7fea30c7ec3c4f2f16e4c081a04193a8e8a80c1fe2"
+    },
+    "hit-5": {
+      "file": "hit-5.wav",
+      "snd": [
+        5000,
+        4
+      ],
+      "duration": 0.3826,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "fbfa9fd2721b17b7340844aab46c6db996132630cde3c59b2c2fe4c159e39ade"
+    },
+    "hit-6": {
+      "file": "hit-6.wav",
+      "snd": [
+        5000,
+        5
+      ],
+      "duration": 0.6286,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "d839dfc97c73f38e7027ec0a5bc88862b289319b84f364249b66c4721ad492c4"
+    },
+    "dizzy": {
+      "file": "dizzy.wav",
+      "snd": [
+        5000,
+        5300
+      ],
+      "duration": 2.3886,
+      "sampleRate": 32000,
+      "channels": 1,
+      "bits": 16,
+      "sha256": "993afa380f5fd98e0aa51f341e7eab4dc0041339a479c6922ad100999d668db7"
+    },
+    "laugh-1": {
+      "file": "laughter/1.mp3",
+      "source": "User-provided laughter recording",
+      "sha256": "7bed4b784b134e84540bf185a660be846355301b97c54b20d790479ace4ea25b"
+    },
+    "laugh-2": {
+      "file": "laughter/2.mp3",
+      "source": "User-provided laughter recording",
+      "sha256": "71a47d04715b37358d9adaa47acc32c1281a7b4ef1427e141a516e4209dd025e"
+    },
+    "laugh-3": {
+      "file": "laughter/3.mp3",
+      "source": "User-provided laughter recording",
+      "sha256": "c81d414ae93a0d86ca8982c75e66247e778f78318543d64ddaacdef02f978731"
+    },
+    "laugh-4": {
+      "file": "laughter/4.mp3",
+      "source": "User-provided laughter recording",
+      "sha256": "c81d414ae93a0d86ca8982c75e66247e778f78318543d64ddaacdef02f978731"
+    },
+    "laugh-10": {
+      "file": "laughter/10.mp3",
+      "source": "User-provided laughter recording",
+      "sha256": "6cbcd433b326950a4a0d45d1f613726df4b95d48ab45e0cfad507f6a34576cf4"
+    },
+    "laugh-11": {
+      "file": "laughter/11.mp3",
+      "source": "User-provided laughter recording",
+      "sha256": "32ed52e57e988cf7f5526e2a3c2201f920dcb729a6e540d0c66d43276dc3a8d2"
+    },
+    "laugh-12": {
+      "file": "laughter/12.mp3",
+      "source": "User-provided laughter recording",
+      "sha256": "6052ff0d9e02e83ea8b4000eb2fbb558512d3c28cad6fa3890abcf2a6fcf48a5"
+    },
+    "laugh-13": {
+      "file": "laughter/13.mp3",
+      "source": "User-provided laughter recording",
+      "sha256": "a8dbc21123c2718894c3d38eb3bbb59fc80e7fc4aef45a1a8b748f86eb3b76e7"
+    }
+  },
+  "mappingEvidence": {
+    "hadouken": "ryuspecial.zss, StateDef 1000: voice 4,0; launch 6,0",
+    "shoryuken": "ryuspecial.zss, StateDef 1100: voice 4,1; swing 1,3",
+    "tatsumaki": "ryuspecial.zss, StateDef 1200: voice 4,2; swing 1,6",
+    "normal": "ryunormal.zss: grunts 3,0..2; swings 1,1..6; impacts 2,1..6",
+    "fireballImpact": "ryuhelper.zss: impact 2,7",
+    "hit": "ryunegative.zss: normal Ryu hit voice 5000,random%6",
+    "dizzy": "ryunegative.zss: dizzy animation 5300 uses voice 5000,5300"
+  }
+}

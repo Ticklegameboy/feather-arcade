@@ -1,0 +1,42 @@
+const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),assert=require('node:assert/strict');
+const {chromium}=require(require.resolve('playwright',{paths:[path.resolve(__dirname,'..'),path.join(os.homedir(),'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules')]}));
+(async()=>{const b=await chromium.launch({headless:true,channel:'msedge'});try{
+ const p=await b.newPage({viewport:{width:1280,height:1000}}),errors=[],requests=[];
+ p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>requests.push(r.url()));
+ await p.addInitScript(()=>{if(!localStorage.getItem('r88-seeded')){
+  localStorage.setItem('feather-arcade.magic.v1',JSON.stringify({version:1,amount:500,owned:[1,2],tutorialSeen:true}));
+  localStorage.setItem('feather-arcade.dungeon.v1',JSON.stringify({version:1,enemies:['ryu','red-ranger','kuuga','shingo','ryo'].map(kind=>({id:kind,kind})),guideSeen:true}));
+  localStorage.setItem('r88-seeded','yes');}});
+ await p.goto(process.env.GAME_URL||'http://127.0.0.1:8014/');await p.evaluate(()=>assetsReady);
+ assert.deepEqual(await p.locator('#encounter-select option').evaluateAll(es=>es.map(e=>e.value)),['ryu','red-ranger']);
+ assert.equal(await p.evaluate(()=>Dungeon.count),2);
+ assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('feather-arcade.dungeon.v1')).enemies.length),5);
+ assert.deepEqual(await p.evaluate(()=>{EnemyRoster.reset('ryu');return Array.from({length:6},()=>EnemyRoster.next());}),['red-ranger','ryu','red-ranger','ryu','red-ranger','ryu']);
+ assert.deepEqual(await p.evaluate(()=>['kuuga','shingo','ryo'].map(k=>enemy(690,k).kind)),['ryu','ryu','ryu']);
+ for(const lang of ['en','ja','zh-TW']){await p.locator(`[data-language="${lang}"]`).click();assert.equal(await p.locator('#encounter-select option').count(),2);}
+ await p.locator('#encounter-select').selectOption('red-ranger');await p.locator('#start').click();
+ assert.equal(await p.evaluate(()=>enemies[0].kind),'red-ranger');
+ await p.evaluate(()=>{player.hp=100;enemies[0].cool=8;enemies[0].special=8;});
+ const box=await p.locator('#game').boundingBox();await p.mouse.click(box.x+box.width*.7,box.y+box.height*.58);
+ await p.waitForFunction(()=>enemies[0].bind>0);
+ assert.equal(await p.locator('#mummy-helmet').isVisible(),false);
+ assert.equal(await p.locator('#mummy-footwear').isVisible(),false);
+ await p.locator('#dungeon-open').click();assert.equal(await p.locator('.prison-card button').count(),0);
+ assert.equal(await p.locator('.prison-card:not(.empty-cell)').count(),2);
+ await p.locator('[data-prison-id="red-ranger"]').click();
+ assert.equal(await p.evaluate(()=>Dungeon.prisoner.kind),'red-ranger');
+ await p.locator('[data-prison-binding="1"]').click();
+ await p.locator('#dungeon-helmet').click();assert.equal(await p.evaluate(()=>Dungeon.prisoner.mummyUnhelmet),true);
+ await p.locator('#dungeon-footwear').click();assert.equal(await p.evaluate(()=>Dungeon.prisoner.mummyFootwear),'socks');
+ await p.evaluate(()=>{setFeatherContact(Dungeon.prisoner,true);Dungeon.prisoner.breakDamage=51;});
+ assert.equal(await p.evaluate(()=>EnemyRoster.bindingState(Dungeon.prisoner,true).frames===EnemyRoster.mummySet(Dungeon.prisoner).laughTurn.frames),true);
+ await p.locator('#dungeon-back').click();await p.locator('#dungeon-back').click();
+ await p.reload();await p.evaluate(()=>assetsReady);assert.equal(await p.evaluate(()=>Dungeon.count),2);
+ assert.equal(await p.evaluate(()=>JSON.parse(localStorage.getItem('feather-arcade.dungeon.v1')).enemies.length),5);
+ await p.locator('#encounter-select').selectOption('ryu');await p.locator('#start').click();assert.equal(await p.evaluate(()=>enemies[0].kind),'ryu');
+ assert.equal(requests.some(u=>/fighters\/(kuuga|shingo|ryo)\//.test(u)),false);
+ assert.deepEqual(errors,[]);
+ const out=path.resolve(__dirname,'../verification-output');fs.mkdirSync(out,{recursive:true});
+ await p.screenshot({path:path.join(out,'two-fighters-r88.png')});
+ console.log(JSON.stringify({passed:true,active:['ryu','red-ranger'],oldRecordsPreserved:5,hiddenAssetRequests:0,redBattleDungeonAndLaughter:true,errors}));
+}finally{await b.close()}})().catch(e=>{console.error(e);process.exit(1)});

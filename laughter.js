@@ -1,10 +1,11 @@
 'use strict';
 const Laughter=(()=>{
- const key='feather-arcade.magic.v1',legacyKey='feather-arcade.laughter.v1',prices={1:35,2:100};
+ const key='feather-arcade.magic.v1',legacyKey='feather-arcade.laughter.v1',prices={1:35,2:100,3:150,4:220};
+ let equipped=0;
  let amount=0,owned=[],tutorialReady=false,tutorialSeen=false,dirty=false,lastSave=-Infinity,lastDisplay='';
  try{
   const saved=JSON.parse(localStorage.getItem(key)||'null');
-  if(saved?.version===1&&Number.isFinite(saved.amount)&&saved.amount>=0){amount=saved.amount;owned=[1,2].filter(id=>saved.owned?.includes(id));tutorialReady=saved.tutorialReady===true;tutorialSeen=saved.tutorialSeen===true;}
+  if(saved?.version===1&&Number.isFinite(saved.amount)&&saved.amount>=0){amount=saved.amount;owned=[1,2,3,4].filter(id=>saved.owned?.includes(id));equipped=[3,4].includes(saved.equipped)&&owned.includes(saved.equipped)?saved.equipped:0;tutorialReady=saved.tutorialReady===true;tutorialSeen=saved.tutorialSeen===true;}
   else{const legacy=JSON.parse(localStorage.getItem(legacyKey)||'0');if(Number.isFinite(legacy)&&legacy>=0)amount=legacy;dirty=true;}
  }catch{}
  function owns(id){return id===0||owned.includes(id);}
@@ -16,12 +17,13 @@ const Laughter=(()=>{
   if(value&&formatted!==lastDisplay){value.textContent=formatted;lastDisplay=formatted;}
  }
  // Balance and purchases are saved together, so reload cannot split a transaction.
- function flush(){if(!dirty)return;try{localStorage.setItem(key,JSON.stringify({version:1,amount,owned,tutorialReady,tutorialSeen}));dirty=false;lastSave=performance.now();}catch{}}
+ function flush(){if(!dirty)return;try{localStorage.setItem(key,JSON.stringify({version:1,amount,owned,equipped,tutorialReady,tutorialSeen}));dirty=false;lastSave=performance.now();}catch{}}
  function tick(){checkTutorial();render();if(dirty&&performance.now()-lastSave>=250)flush();}
  function add(damage){if(!Number.isFinite(damage)||damage<=0)return;amount+=damage;dirty=true;tick();}
  function purchase(id){if(!Number.isInteger(id)||!Object.hasOwn(prices,id)||owns(id)||amount<prices[id])return false;amount-=prices[id];owned.push(id);if(id===1)tutorialSeen=true;dirty=true;flush();render();return true;}
  function acknowledgeTutorial(){tutorialSeen=true;dirty=true;flush();}
- function resetProgress(){amount=0;owned=[];tutorialReady=false;tutorialSeen=false;dirty=true;try{localStorage.setItem(legacyKey,'0');}catch{}flush();render();}
+ function equip(id){if(![0,3,4].includes(id)||!owns(id))return false;equipped=id;dirty=true;flush();return true;}
+ function resetProgress(){equipped=0;amount=0;owned=[];tutorialReady=false;tutorialSeen=false;dirty=true;try{localStorage.setItem(legacyKey,'0');}catch{}flush();render();}
  window.addEventListener('pagehide',flush);document.addEventListener('visibilitychange',()=>{if(document.hidden)flush();});
- tick();return {add,flush,tick,render,owns,purchase,acknowledgeTutorial,resetProgress,get tutorialPending(){return tutorialReady&&!tutorialSeen&&!owns(1);},get amount(){return amount;}};
+ tick();return {equip,get equipped(){return equipped;},add,flush,tick,render,owns,purchase,acknowledgeTutorial,resetProgress,get tutorialPending(){return tutorialReady&&!tutorialSeen&&!owns(1);},get amount(){return amount;}};
 })();

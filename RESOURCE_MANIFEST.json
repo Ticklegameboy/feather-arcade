@@ -1,0 +1,670 @@
+{
+  "version": "r88",
+  "files": [
+    {
+      "path": "actors.png",
+      "bytes": 1528866,
+      "sha256": "b58539b75f01d5da349fa6a7a083d2f94e1ce150d88d6724f35da6ed3d6eb609"
+    },
+    {
+      "path": "background/CREDITS.txt",
+      "bytes": 2578,
+      "sha256": "49f3b5ed310b7bf47e54d2df7374cb3fe351eb29925f62a85e2e31b5038178b1"
+    },
+    {
+      "path": "background/extended/entrance.png",
+      "bytes": 216905,
+      "sha256": "dad1181f44cc70dc23847f84a8be584bae12caa0ebf35036a9934ebfa5c91182"
+    },
+    {
+      "path": "background/extended/loop.png",
+      "bytes": 354418,
+      "sha256": "ab6bdf48a2141a7e74ebab7435df1b8ca59f41d0065d80b00deb0e278d32c867"
+    },
+    {
+      "path": "cursor-art/ghost-hand-a1.json",
+      "bytes": 21212,
+      "sha256": "b67920530a0a293c232c54661d1cf50cca00c7c74853061473679fe3b1ed7ecb"
+    },
+    {
+      "path": "cursor-art/ghost-hand-a1.png",
+      "bytes": 18581,
+      "sha256": "ef635f3ae52797c2e4461180d334e60fcb79e013e94bb1afa649ba71ea014a22"
+    },
+    {
+      "path": "cursor-tools.js",
+      "bytes": 5638,
+      "sha256": "763b1ff1cc6b8fa11d819c8a6edd3dd464283ac573b4f29f57a3133a7262fcf0"
+    },
+    {
+      "path": "dungeon.js",
+      "bytes": 15842,
+      "sha256": "7f14e44a8d1cebda4952bd53b7accc0f3757d396bfce76fb939e1ffba2961af4"
+    },
+    {
+      "path": "fighters/red-ranger/animations.json",
+      "bytes": 15768,
+      "sha256": "49ef3a33c2dc9c785390fce8c2765d02c26bfe0a9832a99d55e3c806183765a4"
+    },
+    {
+      "path": "fighters/red-ranger/atlas-0.png",
+      "bytes": 276427,
+      "sha256": "49794c904a325dcf350d4b650bbb18dd01d048a25be4b87df3ac9e00c6d66d84"
+    },
+    {
+      "path": "fighters/red-ranger/audio/0-3.wav",
+      "bytes": 5800,
+      "sha256": "bbe0db0d9e6a8e0e59e3c2b5d83f6989964168d9231c75fa65e684852d14ce6e"
+    },
+    {
+      "path": "fighters/red-ranger/audio/0-5.wav",
+      "bytes": 10210,
+      "sha256": "e74a0c7e69b8a31f0c6050760fb595fac6e7733539a9bbc988c85085cf5aaead"
+    },
+    {
+      "path": "fighters/red-ranger/audio/1000-0.wav",
+      "bytes": 32502,
+      "sha256": "cdf0033e1248fa4d5e0e4aca9115b5ff7ee02d083e03c10b75a30f4ef68dab9a"
+    },
+    {
+      "path": "fighters/red-ranger/audio/1000-1.wav",
+      "bytes": 154584,
+      "sha256": "9005e94b753bc663f81605b0e98e2b01b7efb06c8b2e5f98d6c45f2dfed7d16b"
+    },
+    {
+      "path": "fighters/red-ranger/audio/1000-2.wav",
+      "bytes": 175554,
+      "sha256": "bd06246c6df3210781c3205ca7af70fb00b9345bafcc00951ffa0a1837c8335e"
+    },
+    {
+      "path": "fighters/red-ranger/audio/3000-0.wav",
+      "bytes": 129504,
+      "sha256": "ba292370f343d5732fb904c2aa3ec23c8eed9e9a774306f2039accde8c86f411"
+    },
+    {
+      "path": "fighters/red-ranger/audio/5000-0.wav",
+      "bytes": 65350,
+      "sha256": "5e3a1aa5f9411c979664afa0c03e5869f38ac36c7d8865a4103c60ece111791e"
+    },
+    {
+      "path": "fighters/red-ranger/audio/5000-1.wav",
+      "bytes": 69066,
+      "sha256": "b3a0e8ebd62d2ef96703cc31ab6265f3e0f1e1ae9ebad3dda9c36d7a37aa17ee"
+    },
+    {
+      "path": "fighters/red-ranger/audio/manifest.json",
+      "bytes": 714,
+      "sha256": "36951cee90821075ac94515e0e3f0a07fe6554f74e2f576984471f6ded75f9b8"
+    },
+    {
+      "path": "fighters/red-ranger/binding-unhelmet-laugh.json",
+      "bytes": 6466,
+      "sha256": "22ddabf74159244f7cec3f57a025b234aab9137c3239ecf69cdb3f8950298219"
+    },
+    {
+      "path": "fighters/red-ranger/binding-unhelmet-laugh.png",
+      "bytes": 416373,
+      "sha256": "1d55d9ce6fa3a8233e3bfec9a5b6b19e4aa63aa94304353056eca926ffb00d17"
+    },
+    {
+      "path": "fighters/red-ranger/binding-unhelmet-normal.json",
+      "bytes": 6468,
+      "sha256": "b318b717bda71b1af521e6ba4c1d13d0f873389e40a211b46b3a097292392e67"
+    },
+    {
+      "path": "fighters/red-ranger/binding-unhelmet-normal.png",
+      "bytes": 422868,
+      "sha256": "7eed7b0a3498875f055ad075395e9c8629d2acbc28c77ce120a58c2b7630a8d4"
+    },
+    {
+      "path": "fighters/red-ranger/binding.json",
+      "bytes": 9806,
+      "sha256": "275f29e54ad479fa1aa0b87212f362a2c978aff844ddb7f29d41f645747c6153"
+    },
+    {
+      "path": "fighters/red-ranger/binding.png",
+      "bytes": 597850,
+      "sha256": "5006a72535506dc0ac2c7cd2dd74d7ae696e2b28c428f7dd42c50da0ffabc755"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/boots/laugh.json",
+      "bytes": 18635,
+      "sha256": "de9680c1d919669797afc2b6363085b0265575d7231e79ed1d4b535feb9417e4"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/boots/laugh.png",
+      "bytes": 942357,
+      "sha256": "fc604cddc140e4cc2497852cd35f549b938a2f0cf47b53e7c2e33530a69a6f53"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/boots/normal.json",
+      "bytes": 20641,
+      "sha256": "ec17b40a1a8b888dc717f960a5aa3954c7b74061255569f284d3cec4712c0369"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/boots/normal.png",
+      "bytes": 949970,
+      "sha256": "b689575c327bc88cbec4a24cbb9af287656dcd0dadbd05c2e02d4c0a3a28acf5"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/laugh.json",
+      "bytes": 34589,
+      "sha256": "375c0e75b1b6061c1d024bb9b30770954638f9b18d190aedcc0a30c425326afa"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/laugh.png",
+      "bytes": 903620,
+      "sha256": "0a6e340afbe0ca152d7dcf390c8ebe320e0c4c80dd1990ba124efa8cf7d91ce6"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/normal.json",
+      "bytes": 33742,
+      "sha256": "31b50a3c4024432faa566112f5acd7df89078e48d403a2680c7b1878e3c2b6ec"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/normal.png",
+      "bytes": 926024,
+      "sha256": "43cc951312ba7d0b46738561a07ce03273dfdf5f26b65b144b8368e34bb46660"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/socks/laugh.json",
+      "bytes": 14034,
+      "sha256": "077ad970646a23cf16239e204dae24cb62f6424a8e46c989df87d1edff582d54"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/socks/laugh.png",
+      "bytes": 830449,
+      "sha256": "6b809c13d6e771f3c5374088f1e22b6637fbff35d90ff56f61c88bd4a94c8f24"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/socks/normal.json",
+      "bytes": 14363,
+      "sha256": "b0266e1e27d813aff621a8508698f06331b0761f44966f83d3beb3812412f568"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/socks/normal.png",
+      "bytes": 897922,
+      "sha256": "6d3e86c9d1cc8b79303cad2b6c44c14d2d6e4c039c4c210cca8daec37aa2f40d"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/bare/laugh-still.json",
+      "bytes": 34615,
+      "sha256": "b756d99d67df02e17714346feb99a557ac50beddd7df0d3dcb19f1c616a65701"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/bare/laugh-still.png",
+      "bytes": 912437,
+      "sha256": "fdcf925ed620271bf76e6f995199bc87a309097eed601afeafe0c0ce0db96db5"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/bare/laugh.json",
+      "bytes": 34615,
+      "sha256": "b756d99d67df02e17714346feb99a557ac50beddd7df0d3dcb19f1c616a65701"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/bare/laugh.png",
+      "bytes": 915308,
+      "sha256": "65bc6dfb1dc1c54e3bbaf4130c0d79984f9a48b332e5818c964166764c2773ac"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/bare/normal.json",
+      "bytes": 29289,
+      "sha256": "8ed74bb47f94e9569b4af289ea6ef726237309f7f7548838f10784f5b9e321a1"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/bare/normal.png",
+      "bytes": 895103,
+      "sha256": "536fe0dbfcaef190e3ed11ab4d926c6d7161fa56682848f3fc0b0e0a124ce753"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/boots/laugh-still.json",
+      "bytes": 18661,
+      "sha256": "49a4d6b98824f686a6de8041e37d904f356c35aaf1a0b00b155937de3e20b490"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/boots/laugh-still.png",
+      "bytes": 931445,
+      "sha256": "3c7000e6d63f281ca10d3e26949acac09daee35d1903ef7dc3c8e4585aec14fc"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/boots/laugh.json",
+      "bytes": 18661,
+      "sha256": "49a4d6b98824f686a6de8041e37d904f356c35aaf1a0b00b155937de3e20b490"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/boots/laugh.png",
+      "bytes": 933898,
+      "sha256": "ea791168f6a4438f0acac739825e37dd89948efd9ffdf475e124f1ecaad43b25"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/boots/normal.json",
+      "bytes": 16228,
+      "sha256": "833cc25c8d14a6d36e27026f58bb9549e465e089991d35bd145c215b0926a855"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/boots/normal.png",
+      "bytes": 952244,
+      "sha256": "e3ed47a7cdfb2022d8fb085d161198474adbd26d6737501f6776836d95078020"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/socks/laugh-still.json",
+      "bytes": 14060,
+      "sha256": "9322fd96e03e79abe272e541227801e055a04e2dfeae8c1410a758989f2ae198"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/socks/laugh-still.png",
+      "bytes": 831544,
+      "sha256": "8f708acdc43078533524e27e29cdcc396665aaf53b6ed507733c26bbde5b7570"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/socks/laugh.json",
+      "bytes": 14060,
+      "sha256": "9322fd96e03e79abe272e541227801e055a04e2dfeae8c1410a758989f2ae198"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/socks/laugh.png",
+      "bytes": 834660,
+      "sha256": "c304b73a21ad7f73a4413bb2a33958280b2cb102a75d091d2b80f69104f6d825"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/socks/normal.json",
+      "bytes": 18064,
+      "sha256": "8642d03a1fa01b117833ceeee012a7a76d897ef06f4d7e24580b5004ee38fb53"
+    },
+    {
+      "path": "fighters/red-ranger/mummy/unhelmet/socks/normal.png",
+      "bytes": 854129,
+      "sha256": "be98f8d785cdbfa41b7d8774b7ac90b97e530e22c3af8de2c7bda1f0d714ba0b"
+    },
+    {
+      "path": "fighters.js",
+      "bytes": 15745,
+      "sha256": "d238f9e1efd7110997c09203f8f4879eff6509ee99a5e3cabc756acff131450e"
+    },
+    {
+      "path": "game.js",
+      "bytes": 67864,
+      "sha256": "2c586b631f822f02b7dad6cf89d8c9f06adb6bbfff5a937baadcab6cf8c0a0bc"
+    },
+    {
+      "path": "i18n.js",
+      "bytes": 42101,
+      "sha256": "40c839cf56248216df9158de3719aed1a66c39ebde7eab1b8c3f465eff5b9b24"
+    },
+    {
+      "path": "index.html",
+      "bytes": 8946,
+      "sha256": "489579912d8196fa287dcd0ec68b038e9e70c4f22a9a1e20ae8519a581d9bb0e"
+    },
+    {
+      "path": "laughter.js",
+      "bytes": 2763,
+      "sha256": "0d0dd5ca65a2af429e0bc0103d3a5473d9dc3bea602298daf44771e96bdad5ae"
+    },
+    {
+      "path": "magic-shop.js",
+      "bytes": 8738,
+      "sha256": "97246461392f902201c41f45508b3d923f5e587011f30b1dde5a8bfaa15b7656"
+    },
+    {
+      "path": "onboarding.js",
+      "bytes": 2556,
+      "sha256": "a516a882a577ebebfb8385e827323b13ca242bb80226b7c12209a72cc157702d"
+    },
+    {
+      "path": "ryu/animations.json",
+      "bytes": 370990,
+      "sha256": "0b39d4a3fc8a66fd62791af6ed6dd23ae1496d346a00e24cd3f587240f5d95fa"
+    },
+    {
+      "path": "ryu/atlas-0.png",
+      "bytes": 1156270,
+      "sha256": "479fcb0a228c5765dad392b4ce45f10c0beb9fcb6d41ddb594e2a73edb03df54"
+    },
+    {
+      "path": "ryu/atlas-1.png",
+      "bytes": 1138856,
+      "sha256": "64033af354ea743bf60917f2f569a99da09f3e480c66aede66cb14a719388c18"
+    },
+    {
+      "path": "ryu/atlas-2.png",
+      "bytes": 470493,
+      "sha256": "1530902e7dcebc9dc0f676c46a121ae66c56f911e5ab994606914222de1f389a"
+    },
+    {
+      "path": "ryu/atlas-3.png",
+      "bytes": 518622,
+      "sha256": "2a19b36905393ba1c6070e7335f9d107c502186e9ecc89d9468755ccc597c4e2"
+    },
+    {
+      "path": "ryu/atlas-4.png",
+      "bytes": 256905,
+      "sha256": "fe68a00351e682bef7b20f4c319113cff8878201efd1820fbd804243d1fa7298"
+    },
+    {
+      "path": "ryu/atlas-5.png",
+      "bytes": 405906,
+      "sha256": "0ecf298db0d80755f20cf3b76aaaed92f2acca51864e4fbfa206dae4d3d16417"
+    },
+    {
+      "path": "ryu/atlas-6.png",
+      "bytes": 50927,
+      "sha256": "04c6492994cdfde2ce608bcb475942aea6de72697b67c943354176e0497be2b4"
+    },
+    {
+      "path": "ryu/audio/CREDITS.txt",
+      "bytes": 1150,
+      "sha256": "f2f4bb4fac766a41e43438c830a5454a6365ea01b900bb03adae8c87ba973b46"
+    },
+    {
+      "path": "ryu/audio/dizzy.wav",
+      "bytes": 152912,
+      "sha256": "993afa380f5fd98e0aa51f341e7eab4dc0041339a479c6922ad100999d668db7"
+    },
+    {
+      "path": "ryu/audio/grunt-0.wav",
+      "bytes": 9812,
+      "sha256": "2968da6d76100ade6d736f5401333ce33e5a4d6a7f5fdd4833abd63b0f1dd01e"
+    },
+    {
+      "path": "ryu/audio/grunt-1.wav",
+      "bytes": 17388,
+      "sha256": "2694287a0fcf17be591beb3c99b9c9911ee0e9e6a6f1571d5919f820f6e2285a"
+    },
+    {
+      "path": "ryu/audio/grunt-2.wav",
+      "bytes": 22600,
+      "sha256": "9870cf8762b3a455f1b6252a2f4ad5d1916ef4a80fa15516dc3f8403dbab47ce"
+    },
+    {
+      "path": "ryu/audio/hadouken-launch.wav",
+      "bytes": 46724,
+      "sha256": "f15f6c0cfa659f44587d64d93f3e07807c1abb85faaa5014567019c363586194"
+    },
+    {
+      "path": "ryu/audio/hadouken.wav",
+      "bytes": 37200,
+      "sha256": "6939a8bdd73e888850c599c1962ab1e00e49b4000b69b9efbae954fe9c124e8a"
+    },
+    {
+      "path": "ryu/audio/hit-1.wav",
+      "bytes": 18494,
+      "sha256": "39abedc6bf58160684c318f645abe1cb6fcd8d06b7028aa9e74986ec76f1a61e"
+    },
+    {
+      "path": "ryu/audio/hit-2.wav",
+      "bytes": 16618,
+      "sha256": "a9c812be393681a894ad0baf5ac99b7d6acad87111a97e2d68497856db5d838d"
+    },
+    {
+      "path": "ryu/audio/hit-3.wav",
+      "bytes": 27064,
+      "sha256": "61d9b37a04def5a3ba2612f0e079cc8e294a688eead5899786109f4884574201"
+    },
+    {
+      "path": "ryu/audio/hit-4.wav",
+      "bytes": 31178,
+      "sha256": "cc85deaca25a2a1a0b55bd7fea30c7ec3c4f2f16e4c081a04193a8e8a80c1fe2"
+    },
+    {
+      "path": "ryu/audio/hit-5.wav",
+      "bytes": 24530,
+      "sha256": "fbfa9fd2721b17b7340844aab46c6db996132630cde3c59b2c2fe4c159e39ade"
+    },
+    {
+      "path": "ryu/audio/hit-6.wav",
+      "bytes": 40276,
+      "sha256": "d839dfc97c73f38e7027ec0a5bc88862b289319b84f364249b66c4721ad492c4"
+    },
+    {
+      "path": "ryu/audio/impact-1.wav",
+      "bytes": 39274,
+      "sha256": "1375bf0becc4f03936c1d1f78ff42f8a13b13c537f2fbb36b40ef64eb6c5d8cc"
+    },
+    {
+      "path": "ryu/audio/impact-2.wav",
+      "bytes": 45042,
+      "sha256": "5cadf8998d4fc39871dfc27510dd6f701daf4d5618799029214cf5da5aab2ff0"
+    },
+    {
+      "path": "ryu/audio/impact-3.wav",
+      "bytes": 45602,
+      "sha256": "6273c2a55a8127f05ad46104248bbf033291006cc961b4a78ba35ec91836d2e6"
+    },
+    {
+      "path": "ryu/audio/impact-4.wav",
+      "bytes": 38154,
+      "sha256": "8006d6a165d05975cbaf5584b8d645725616b4b1449b8f334b006e6547de123b"
+    },
+    {
+      "path": "ryu/audio/impact-5.wav",
+      "bytes": 50194,
+      "sha256": "373d7d4f6ae477cb617d23be367f4f334e6687cac9b07d2eb9f7f07b9ea3b5be"
+    },
+    {
+      "path": "ryu/audio/impact-6.wav",
+      "bytes": 60946,
+      "sha256": "b7e43356d106fafa7f7863d1f005a5a35d579c29bba39a3fb98a8637097ba2bc"
+    },
+    {
+      "path": "ryu/audio/impact-7.wav",
+      "bytes": 36012,
+      "sha256": "d832b1e32bc3568abf00403ede7d92858258e55b58fc4ca7d274c50225e35a3c"
+    },
+    {
+      "path": "ryu/audio/laughter/1.mp3",
+      "bytes": 80071,
+      "sha256": "7bed4b784b134e84540bf185a660be846355301b97c54b20d790479ace4ea25b"
+    },
+    {
+      "path": "ryu/audio/laughter/10.mp3",
+      "bytes": 93028,
+      "sha256": "6cbcd433b326950a4a0d45d1f613726df4b95d48ab45e0cfad507f6a34576cf4"
+    },
+    {
+      "path": "ryu/audio/laughter/11.mp3",
+      "bytes": 100969,
+      "sha256": "32ed52e57e988cf7f5526e2a3c2201f920dcb729a6e540d0c66d43276dc3a8d2"
+    },
+    {
+      "path": "ryu/audio/laughter/12.mp3",
+      "bytes": 111836,
+      "sha256": "6052ff0d9e02e83ea8b4000eb2fbb558512d3c28cad6fa3890abcf2a6fcf48a5"
+    },
+    {
+      "path": "ryu/audio/laughter/13.mp3",
+      "bytes": 86340,
+      "sha256": "a8dbc21123c2718894c3d38eb3bbb59fc80e7fc4aef45a1a8b748f86eb3b76e7"
+    },
+    {
+      "path": "ryu/audio/laughter/2.mp3",
+      "bytes": 82579,
+      "sha256": "71a47d04715b37358d9adaa47acc32c1281a7b4ef1427e141a516e4209dd025e"
+    },
+    {
+      "path": "ryu/audio/laughter/3.mp3",
+      "bytes": 115179,
+      "sha256": "c81d414ae93a0d86ca8982c75e66247e778f78318543d64ddaacdef02f978731"
+    },
+    {
+      "path": "ryu/audio/laughter/4.mp3",
+      "bytes": 115179,
+      "sha256": "c81d414ae93a0d86ca8982c75e66247e778f78318543d64ddaacdef02f978731"
+    },
+    {
+      "path": "ryu/audio/manifest.json",
+      "bytes": 10205,
+      "sha256": "e6ecd1c8a56d5dca90625b073ba7de4377c080e6bdd4a7095826dc2cb8bb6b0b"
+    },
+    {
+      "path": "ryu/audio/shoryuken.wav",
+      "bytes": 43656,
+      "sha256": "5f8b11e36de0558e876a6a42f67cc12bf7ea0e5932f42a8145d60693abed382a"
+    },
+    {
+      "path": "ryu/audio/swing-1.wav",
+      "bytes": 5618,
+      "sha256": "125ac1f5857e48bfc8acc81431c20fbd329e7714b554130ce0b48cf926149d7c"
+    },
+    {
+      "path": "ryu/audio/swing-2.wav",
+      "bytes": 6626,
+      "sha256": "382c89678f0db12e84267b8344036bf6e82bc08bf1188380b5f4f0547832ff14"
+    },
+    {
+      "path": "ryu/audio/swing-3.wav",
+      "bytes": 8866,
+      "sha256": "38bf85b275007e639d952b8b766f39c8245c095c3e7356f1da5061e0eead8668"
+    },
+    {
+      "path": "ryu/audio/swing-4.wav",
+      "bytes": 7018,
+      "sha256": "2eb4bfd7000c51bf503fd8fbdc7b31a255a2a29f1a9c223cb6dab471787971f3"
+    },
+    {
+      "path": "ryu/audio/swing-5.wav",
+      "bytes": 8306,
+      "sha256": "bf00eecf23c781cb30a4b8c6ab04443b8a5002ee158d14db88a6cb37ce95917f"
+    },
+    {
+      "path": "ryu/audio/swing-6.wav",
+      "bytes": 10322,
+      "sha256": "62155b2e536b39e733d0347f954f4ff836650245dbb9a499e695b775f617b6ad"
+    },
+    {
+      "path": "ryu/audio/tatsumaki.wav",
+      "bytes": 64820,
+      "sha256": "542b418023d367d011c0fb32d526a5110c8b4b33e0f50c2e3e839dda5d70550d"
+    },
+    {
+      "path": "ryu/binding-laugh.png",
+      "bytes": 1281387,
+      "sha256": "11a132d09a5b8aa2da8d75ae0c16bbc20686a622a2d2738181df34f1d5c3e208"
+    },
+    {
+      "path": "ryu/binding.png",
+      "bytes": 1294941,
+      "sha256": "0d26ee1b1e2750b207a2f9cb6280b1944aaee9c41271ef6a8eed71284e698732"
+    },
+    {
+      "path": "ryu/CREDITS.txt",
+      "bytes": 3806,
+      "sha256": "064e27b1d172b94d0a8ca55c3f12bf06cdcb01af46f2b4183d25a84880e2911c"
+    },
+    {
+      "path": "ryu/hit-smile.png",
+      "bytes": 1329044,
+      "sha256": "0fda2fb333e5ff94fb5dd5c50031f93206ecdfc52bc73a151713e1f22483344d"
+    },
+    {
+      "path": "ryu/mummy/binding-laugh-layout.json",
+      "bytes": 760,
+      "sha256": "ba2c4df5c96df13bc23fee1efc01ff2a19692447ee4fcf90c358592e12960f14"
+    },
+    {
+      "path": "ryu/mummy/binding-laugh.png",
+      "bytes": 1375340,
+      "sha256": "9dea44367f57223566d720d79cec320d1c4c48722bba3562c500eeec4f83abe3"
+    },
+    {
+      "path": "ryu/mummy/binding-layout.json",
+      "bytes": 848,
+      "sha256": "ff4858d217c5899a024ae54ac7d4b2b6f9503397091b127e806e2d99d2d30a91"
+    },
+    {
+      "path": "ryu/mummy/binding.png",
+      "bytes": 984140,
+      "sha256": "d05f38009b38b1840d2480c38b0edbe3015d9853da7445c04ebe4b58d4346447"
+    },
+    {
+      "path": "ryu/mummy-vine/binding-laugh-layout.json",
+      "bytes": 1259,
+      "sha256": "d51886b35481ebb5d1a32ad639511989068703b13eb0ae361ef28c744e9f4c17"
+    },
+    {
+      "path": "ryu/mummy-vine/binding-laugh.png",
+      "bytes": 2365465,
+      "sha256": "e67b272749512df15d32cc5361346409b5bb519b1795ace9b0d069c3b84a50d2"
+    },
+    {
+      "path": "ryu/mummy-vine/binding-layout.json",
+      "bytes": 1260,
+      "sha256": "e67063ba51bdd8bcdfb8da3acf125de6e18315323f386225605123d95f5b292d"
+    },
+    {
+      "path": "ryu/mummy-vine/binding.png",
+      "bytes": 2410531,
+      "sha256": "81d76460920b2785d10755e87421aa11595c96ad9dac84b48e2068139fa74ff0"
+    },
+    {
+      "path": "ryu/shirtless/binding-laugh.png",
+      "bytes": 1175959,
+      "sha256": "15f12512df0ae38264007073681605ac7fa0b6ede2f4d143184bad941c371d8e"
+    },
+    {
+      "path": "ryu/shirtless/binding.png",
+      "bytes": 1172790,
+      "sha256": "292b09a22cbb89730259828db8a9cf35e4cc841ef6e0fec16ef726acc637c768"
+    },
+    {
+      "path": "ryu/shirtless/combat-0.png",
+      "bytes": 266989,
+      "sha256": "cf45d4ffd02bbec9679c098dab286900350a2dba4b11108df19cb5d4dc85bc0b"
+    },
+    {
+      "path": "ryu/shirtless/combat-1.png",
+      "bytes": 273556,
+      "sha256": "3dcc2a3c97055a695abbf31120c7db5829847f49ec7531defa356cc13e6fe384"
+    },
+    {
+      "path": "ryu/shirtless/combat-2.png",
+      "bytes": 250536,
+      "sha256": "eb90870e4f8515287813eed406f9831c05b106e1ba27f2435b4992de392ddc95"
+    },
+    {
+      "path": "ryu/shirtless/combat-3.png",
+      "bytes": 259347,
+      "sha256": "374ca424d28c8dd11f2b522ef1ee632b3a855fa80bd133871f991636a36aa3cc"
+    },
+    {
+      "path": "ryu/shirtless/combat-4.png",
+      "bytes": 137672,
+      "sha256": "7241514d25c8118a095016e9bbf33fc8e494f4eb90c4ca4e674a540381f2cf00"
+    },
+    {
+      "path": "ryu/shirtless/combat-5.png",
+      "bytes": 85506,
+      "sha256": "fc2ab1d34fd49882b0b1f03ddbffd12ed901695e555ebde94388257f299ab59b"
+    },
+    {
+      "path": "ryu/shirtless/hit-smile.png",
+      "bytes": 617698,
+      "sha256": "097c97b760e817d033b54dfe6e7f15188d55c62de68a2bb8675433dcf29e3953"
+    },
+    {
+      "path": "ryu/shirtless/manifest.json",
+      "bytes": 15192,
+      "sha256": "471252abb5ae03135c9e1ba89c2b47925df5c641e68241af97e6da0eeacd6740"
+    },
+    {
+      "path": "ryu-audio.js",
+      "bytes": 5461,
+      "sha256": "f937fa920ecd8f36b13cc895c14cb9ef0418f9b136ca90eeb207973b53c19025"
+    },
+    {
+      "path": "ryu.js",
+      "bytes": 5411,
+      "sha256": "493e5ae9e368eff22e087a31ba6d9ef4332cc0aa1c2bb8031bdc58bc29b9dbe9"
+    },
+    {
+      "path": "style.css",
+      "bytes": 21020,
+      "sha256": "a6d7ab966cea61b97a9f5b2ddf9aba585129af3d1f846427cf5172dfb44d458a"
+    },
+    {
+      "path": "wizard-melee.png",
+      "bytes": 1422039,
+      "sha256": "65f996e4cc109d05bc65beab120cd27498e7dad41b7bbd38f303645ef6fe2683"
+    }
+  ]
+}

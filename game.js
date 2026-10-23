@@ -1,5 +1,9 @@
 'use strict';
 const tr=I18n.t;
+function newEnemy(e){return typeof EnemyRoster!=='undefined'&&!!EnemyRoster.get(e);}
+function enemyAssets(e){return newEnemy(e)?EnemyRoster.assets(e):RyuAssets;}
+function enemyName(e){return newEnemy(e)?EnemyRoster.name(e):tr('隆');}
+function enemySupportsBinding(e,variant){return !!e&&(newEnemy(e)?EnemyRoster.supportsBinding(e,variant):[0,1,2].includes(variant));}
 let loadFailed=false,ended=false;
 let gameMode='battle';
 const canvas=document.querySelector('#game'),ctx=canvas.getContext('2d'),$=s=>document.querySelector(s),featherCursor=document.querySelector('#feather-cursor');
@@ -11,7 +15,7 @@ let ready=false,running=false,paused=false,sound=true,audio,clock=0,last=0,camer
 let enemies=[],shots=[],bindingShots=[],enemyShots=[],effects=[],texts=[],kills=0,world=0,combo=0,comboTime=0,shake=0;
 const FLOOR=440, BIND_DURATION=20, BIND_HEIGHT=280, BIND_LAUGH_DURATION=1.15, DEFEAT_FALL_DURATION=.65, MELEE_REACH=92, MELEE_HOLD=.48, MELEE_BEAT=.24, INTERACT_REACH=115;
 const MUMMY_HEIGHT=220,VINE_HEIGHT=344, BIND_RING_SPEED=620, BIND_RING_REACH=650, BIND_RING_RADIUS=22;
-function bindingHeight(e){return e.bindVariant===1?MUMMY_HEIGHT:e.bindVariant===2?VINE_HEIGHT:BIND_HEIGHT;}
+function bindingHeight(e){return e.bindVariant===1?(newEnemy(e)?EnemyRoster.mummySet(e)?.normal.layout.displayHeight||MUMMY_HEIGHT:MUMMY_HEIGHT):e.bindVariant===2?VINE_HEIGHT:BIND_HEIGHT;}
 function bindingScale(e){return e.captive?(e.bindVariant===2?2.2:e.bindVariant===1?2:1.6):1;}
 // Frame the vine's limbs, allowing the rooted trunk to continue below the view.
 function bindingY(e){if(e.captive)return e.bindVariant===2?264:65+Math.sin(e.bindElapsed*2.8)*2;return e.bindVariant===2?0:-38+Math.sin(e.bindElapsed*2.8)*3;}
@@ -25,7 +29,7 @@ function syncFeatherMetrics(){
 }
 function featherAttackPolygon(wx,wy){
  const angle=(mouseFeather.angle||0)*Math.PI/180,c=Math.cos(angle),s=Math.sin(angle);
- return FEATHER_ATTACK_POLYGON.map(([x,y])=>{
+ return (typeof CursorTools!=='undefined'?CursorTools.polygon():FEATHER_ATTACK_POLYGON).map(([x,y])=>{
   x-=18;y-=22;
   return [wx+(x*c-y*s)*(mouseFeather.facing||1)*(mouseFeather.scaleX||1),wy+(x*s+y*c+(mouseFeather.lift||0))*(mouseFeather.scaleY||1)];
  });
@@ -51,6 +55,7 @@ const MOVES={
  hadouken:{label:'波動拳',damage:10,windup:.3},shoryuken:{label:'升龍拳',damage:15,windup:.32},
  tatsu:{label:'旋風腿',damage:13,windup:.32}
 };
+if(typeof EnemyRoster!=='undefined')Object.assign(MOVES,EnemyRoster.moves);
 function loadImage(im,url){return new Promise((resolve,reject)=>{im.onload=resolve;im.onerror=()=>reject(Error(tr('影象載入失敗')));im.src=RyuAssets.assetURL(url);});}
 function prepareWizard(){
  for(const [x,y,w,h] of crops){
@@ -110,9 +115,10 @@ function prepareMelee(){
   g.putImageData(d,0,0);meleeFrames.push(c);
  }
 }
-const assetsReady=Promise.all([fetch('ryu--mummy--binding-layout.json?v='+RyuAssets.assetRevision).then(r=>{if(!r.ok)throw Error('Mummy layout failed');return r.json();}).then(layout=>{mummyBindingLayout=layout;}),fetch('ryu--mummy--binding-laugh-layout.json?v='+RyuAssets.assetRevision).then(r=>{if(!r.ok)throw Error('Mummy laugh layout failed');return r.json();}).then(layout=>{mummyLaughLayout=layout;}),fetch('ryu--mummy-vine--binding-layout.json?v='+RyuAssets.assetRevision).then(r=>{if(!r.ok)throw Error('Vine layout failed');return r.json();}).then(layout=>{vineBindingLayout=layout;}),fetch('ryu--mummy-vine--binding-laugh-layout.json?v='+RyuAssets.assetRevision).then(r=>{if(!r.ok)throw Error('Vine laugh layout failed');return r.json();}).then(layout=>{vineLaughLayout=layout;}),loadImage(sheet,'actors.png'),loadImage(bg,'background--extended--entrance.png'),loadImage(alleyLoop,'background--extended--loop.png'),loadImage(bindingSheet,'ryu--binding.png'),loadImage(bindingLaughSheet,'ryu--binding-laugh.png'),loadImage(mummySheet,'ryu--mummy--binding.png'),loadImage(mummyLaughSheet,'ryu--mummy--binding-laugh.png'),loadImage(vineSheet,'ryu--mummy-vine--binding.png'),loadImage(vineLaughSheet,'ryu--mummy-vine--binding-laugh.png'),loadImage(normalHitSheet,'ryu--hit-smile.png'),loadImage(bareBindingSheet,'ryu--shirtless--binding.png'),loadImage(bareLaughSheet,'ryu--shirtless--binding-laugh.png'),loadImage(bareHitSheet,'ryu--shirtless--hit-smile.png'),loadImage(meleeSheet,'wizard-melee.png'),RyuAssets.load()]).then(()=>{
+const assetsReady=Promise.all([typeof EnemyRoster!=='undefined'?EnemyRoster.load():Promise.resolve(),fetch('ryu/mummy/binding-layout.json?v='+RyuAssets.assetRevision).then(r=>{if(!r.ok)throw Error('Mummy layout failed');return r.json();}).then(layout=>{mummyBindingLayout=layout;}),fetch('ryu/mummy/binding-laugh-layout.json?v='+RyuAssets.assetRevision).then(r=>{if(!r.ok)throw Error('Mummy laugh layout failed');return r.json();}).then(layout=>{mummyLaughLayout=layout;}),fetch('ryu/mummy-vine/binding-layout.json?v='+RyuAssets.assetRevision).then(r=>{if(!r.ok)throw Error('Vine layout failed');return r.json();}).then(layout=>{vineBindingLayout=layout;}),fetch('ryu/mummy-vine/binding-laugh-layout.json?v='+RyuAssets.assetRevision).then(r=>{if(!r.ok)throw Error('Vine laugh layout failed');return r.json();}).then(layout=>{vineLaughLayout=layout;}),loadImage(sheet,'actors.png'),loadImage(bg,'background/extended/entrance.png'),loadImage(alleyLoop,'background/extended/loop.png'),loadImage(bindingSheet,'ryu/binding.png'),loadImage(bindingLaughSheet,'ryu/binding-laugh.png'),loadImage(mummySheet,'ryu/mummy/binding.png'),loadImage(mummyLaughSheet,'ryu/mummy/binding-laugh.png'),loadImage(vineSheet,'ryu/mummy-vine/binding.png'),loadImage(vineLaughSheet,'ryu/mummy-vine/binding-laugh.png'),loadImage(normalHitSheet,'ryu/hit-smile.png'),loadImage(bareBindingSheet,'ryu/shirtless/binding.png'),loadImage(bareLaughSheet,'ryu/shirtless/binding-laugh.png'),loadImage(bareHitSheet,'ryu/shirtless/hit-smile.png'),loadImage(meleeSheet,'wizard-melee.png'),RyuAssets.load()]).then(async()=>{
+ if(typeof CursorTools!=='undefined')await CursorTools.ready;
  prepareWizard();prepareBinding();prepareBinding(bindingLaughSheet,bindingLaughFrames);prepareMummy(mummySheet,mummyFrames,mummyBindingLayout);prepareMummy(mummyLaughSheet,mummyLaughFrames,mummyLaughLayout);prepareMummy(vineSheet,vineFrames,vineBindingLayout);prepareMummy(vineLaughSheet,vineLaughFrames,vineLaughLayout);prepareNormalHit();prepareBinding(bareBindingSheet,bareBindingFrames);prepareBinding(bareLaughSheet,bareLaughFrames);prepareNormalHit(bareHitSheet,bareHitFrames);prepareMelee();ready=true;$('#start').disabled=false;
- $('#load').textContent=tr('隆的戰鬥動作已就緒 · 按 Enter 開始');if(typeof Dungeon!=='undefined')Dungeon.refresh();
+ $('#load').textContent=tr(typeof EnemyRoster!=='undefined'?'兩位對手已就緒 · 按 Enter 開始':'隆的戰鬥動作已就緒 · 按 Enter 開始');if(typeof Dungeon!=='undefined')Dungeon.refresh();
 }).catch(error=>{console.error(error);loadFailed=true;$('#load').textContent=tr('素材載入失敗，請重新整理重試');});
 $('#start').disabled=true;
 function tone(f=440,t=.09,type='sine',vol=.06){
@@ -121,13 +127,14 @@ function tone(f=440,t=.09,type='sine',vol=.06){
 }
 function unlockGameAudio(){
  if(!sound)return;
- try{audio??=new(window.AudioContext||window.webkitAudioContext)();if(!paused)audio.resume().catch(()=>{});RyuAudio.init(audio,RyuAssets.assetRevision);RyuAudio.setEnabled(true);}catch{}
+ try{audio??=new(window.AudioContext||window.webkitAudioContext)();if(!paused)audio.resume().catch(()=>{});RyuAudio.init(audio,RyuAssets.assetRevision);RyuAudio.setEnabled(true);if(typeof EnemyRoster!=='undefined')EnemyRoster.initAudio(audio);}catch{}
 }
-function enemy(x){return {x,y:0,hp:100,shirtless:false,bindVariant:0,face:-1,state:'intro',anim:'intro',t:0,stateLength:1.05,stun:0,bind:0,bindElapsed:0,bindLaugh:0,bindLaughElapsed:0,hands:0,dead:0,defeatStartY:0,cool:.8,special:2,reaction:.3,decision:.4,hitDone:false,lastHit:0,featherHit:false,featherRecoveryPending:false,castDone:false,balance:0,hitFlash:0,posture:'idle',variation:Math.random(),move:null};}
+function enemy(x,kind='ryu'){if(typeof EnemyRoster!=='undefined'&&!EnemyRoster.isEnabled(kind))kind='ryu';return {kind,x,y:0,hp:100,shirtless:false,bindVariant:0,face:-1,state:'intro',anim:'intro',t:0,stateLength:1.05,stun:0,bind:0,bindElapsed:0,bindLaugh:0,bindLaughElapsed:0,hands:0,dead:0,defeatStartY:0,cool:.8,special:2,reaction:.3,decision:.4,hitDone:false,lastHit:0,featherHit:false,featherRecoveryPending:false,castDone:false,balance:0,hitFlash:0,posture:'idle',variation:Math.random(),move:null};}
 function reset(){
  RyuAudio.stopAll();
  Object.assign(player,{x:220,hp:100,face:1,cast:0,inv:0,dash:0,cd:[0,0,0],moving:false,melee:0,meleeElapsed:0,meleeNextHit:.14});
- enemies=[enemy(690)];shots=[];bindingShots=[];enemyShots=[];effects=[];texts=[];camera=0;kills=0;combo=0;clock=0;world=0;spawnAt=1130;shake=0;
+ if(typeof EnemyRoster!=='undefined')EnemyRoster.reset($('#encounter-select')?.value||'ryu');
+ enemies=[enemy(690,$('#encounter-select')?.value||'ryu')];shots=[];bindingShots=[];enemyShots=[];effects=[];texts=[];camera=0;kills=0;combo=0;clock=0;world=0;spawnAt=1130;shake=0;
 }
 function start(){if(typeof Onboarding!=='undefined'&&Onboarding.active)return;if(typeof MagicShop!=='undefined'&&MagicShop.isOpen)return;if(!ready||gameMode!=='battle')return;ended=false;reset();running=true;paused=false;unlockGameAudio();$('#overlay').hidden=true;$('#paused').hidden=true;$('#pause').textContent=tr('Ⅱ 暫停');canvas.focus();tone(600,.2);}
 function newGame(){if(!ready||running||gameMode!=='battle')return;Laughter.resetProgress();Dungeon.resetProgress();start();Dungeon.refresh();MagicShop.tick();}
@@ -274,34 +281,114 @@ const RYU_BINDING_DIALOGUE={
   ]
  }
 };
+const RED_DIALOGUE={
+ "bound": [
+  "卑鄙的怪人，正義不會向你低頭！",
+  "我的同伴還在等我，我必須突破這裡。",
+  "束縛得住我的身體，束縛不了我的信念。"
+ ],
+ "strongBound": [
+  "穩住呼吸……紅戰士，不能倒下。",
+  "卑鄙的怪人，你休想讓我背棄同伴。",
+  "只要還能站起來，我就會阻止你。"
+ ],
+ "desperateBound": [
+  "喘口氣……還有人需要我守護。",
+  "力量快耗盡了……信念不能動搖。",
+  "卑鄙的怪人，這場戰鬥還沒有結束。"
+ ],
+ "laugh": [
+  "哈、哈哈！卑鄙的怪人，正面迎戰！",
+  "哈哈！這種把戲動搖不了我的決心！",
+  "哈、哈哈！紅戰士可不會退縮！"
+ ],
+ "strong": [
+  "哈哈哈！穩住……我還能戰鬥！",
+  "哈、哈哈哈！別小看守護大家的決心！",
+  "哈哈哈！卑鄙的怪人，別得意太早！"
+ ],
+ "plea": [
+  "哈、哈哈哈……讓我調整呼吸！",
+  "哈哈哈……夠了！我不能倒在這裡！",
+  "哈啊、哈哈！同伴們……我會回去的！"
+ ],
+ "pureLaugh": [
+  "哈、哈！哈哈！",
+  "哈哈、哈！",
+  "哈啊、哈哈！"
+ ],
+ "pureStrong": [
+  "哈哈哈、哈啊！",
+  "哈、哈哈哈！哈哈！",
+  "啊哈、哈哈哈！"
+ ],
+ "pureDesperate": [
+  "哈啊、哈哈哈哈……！",
+  "哈哈哈……哈、哈哈！",
+  "啊、哈哈哈哈！哈啊！"
+ ]
+};
+const RED_BINDING_DIALOGUE={
+ "default": {
+  "bound": [
+   "這些光圈一定有弱點，我會找到的。",
+   "解開光圈，卑鄙的怪人！"
+  ],
+  "laugh": [
+   "哈哈！光圈也鎖不住正義！",
+   "哈、哈哈！解開束縛，與我一戰！"
+  ],
+  "plea": [
+   "哈哈哈……先鬆開光圈！讓我喘息！",
+   "哈啊、哈哈！光圈再強，也改不了我的信念！"
+  ]
+ },
+ "mummy": {
+  "bound": [
+   "我會掙開這些繃帶，阻止你的陰謀。",
+   "卑鄙的怪人，別把束縛當成勝利！"
+  ],
+  "laugh": [
+   "哈、哈哈！繃帶困不住我的鬥志！",
+   "哈哈！我會突破這層魔法！"
+  ],
+  "plea": [
+   "哈哈哈……鬆開繃帶！給我一口氣！",
+   "哈、哈哈哈！我還要守護大家……！"
+  ]
+ }
+};
+const RED_PURE_LAUGHTER=new Set([...RED_DIALOGUE.pureLaugh,...RED_DIALOGUE.pureStrong,...RED_DIALOGUE.pureDesperate]);
+function dialoguePureSet(e){return e.kind==='red-ranger'?RED_PURE_LAUGHTER:RYU_PURE_LAUGHTER;}
 const RYU_PURE_LAUGHTER=new Set([...RYU_DIALOGUE.pureLaugh,...RYU_DIALOGUE.pureStrong,...RYU_DIALOGUE.pureDesperate]);
-function ryuBindingDialogueKey(e){return e.bind>0?(e.bindVariant===2?'vine':e.bindVariant===1?'mummy':e.shirtless?'shirtless':'default'):null;}
+function ryuBindingDialogueKey(e){if(newEnemy(e))return null;return e.bind>0?(e.bindVariant===2?'vine':e.bindVariant===1?'mummy':e.shirtless?'shirtless':'default'):null;}
 function chooseRyuDialogue(e,laughing,level){
- const context=RYU_BINDING_DIALOGUE[ryuBindingDialogueKey(e)];
+ const red=e.kind==='red-ranger',dialogue=red?RED_DIALOGUE:RYU_DIALOGUE,pureSet=dialoguePureSet(e);
+ const context=red?(e.bind>0?RED_BINDING_DIALOGUE[e.bindVariant===1?'mummy':'default']:null):RYU_BINDING_DIALOGUE[ryuBindingDialogueKey(e)];
  let pool;
- if(!laughing)pool=context&&Math.random()<.65?context.bound:RYU_DIALOGUE.bound;
+ if(!laughing)pool=red&&level>0?(level===2?dialogue.desperateBound:dialogue.strongBound):context&&Math.random()<.65?context.bound:dialogue.bound;
  else {
   // Never put two spoken captions together: every one earns a pure laugh
   // before another can play. Additional pure laughs keep the mix varied.
   const pure=!e.lastCaptionWasPure||Math.random()<(level===2?.4:.25);
-  if(pure)pool=level===2?RYU_DIALOGUE.pureDesperate:level===1?RYU_DIALOGUE.pureStrong:RYU_DIALOGUE.pureLaugh;
-  else if(level===2&&Math.random()<.65)pool=[...RYU_DIALOGUE.plea,...(context?.plea||[])];
+  if(pure)pool=level===2?dialogue.pureDesperate:level===1?dialogue.pureStrong:dialogue.pureLaugh;
+  else if(level===2&&Math.random()<.65)pool=[...dialogue.plea,...(context?.plea||[])];
   else if(context&&Math.random()<.6)pool=context.laugh;
-  else pool=(level>0?RYU_DIALOGUE.strong:RYU_DIALOGUE.laugh).filter(line=>!RYU_PURE_LAUGHTER.has(line));
+  else pool=(level>0?dialogue.strong:dialogue.laugh).filter(line=>!pureSet.has(line));
  }
  const eligible=line=>!(e.dialogueHistory||[]).includes(line)&&
-  (RYU_PURE_LAUGHTER.has(line)||line!==e.lastSpokenDialogue)&&
+  (pureSet.has(line)||line!==e.lastSpokenDialogue)&&
   (!line.includes('腳')||(laughing&&e.featherHit&&e.featherWeakness===2))&&
   (level<2||!line.includes('還沒認輸'));
  let choices=pool.filter(eligible);
  // Narrow form pools can be exhausted by contact/history filtering. Use
  // other applicable lines rather than repeating the previous spoken line.
  if(!choices.length)choices=(laughing?
-  [...(level===2?RYU_DIALOGUE.plea:level===1?RYU_DIALOGUE.strong:RYU_DIALOGUE.laugh),...(context?.laugh||[])].filter(line=>!RYU_PURE_LAUGHTER.has(line)):
-  [...RYU_DIALOGUE.bound,...(context?.bound||[])]).filter(eligible);
+  [...(level===2?dialogue.plea:level===1?dialogue.strong:dialogue.laugh),...(context?.laugh||[])].filter(line=>!pureSet.has(line)):
+  [...dialogue.bound,...(context?.bound||[])]).filter(eligible);
  const source=choices[Math.floor(Math.random()*choices.length)];
- if(!RYU_PURE_LAUGHTER.has(source))e.lastSpokenDialogue=source;
- if(laughing)e.lastCaptionWasPure=RYU_PURE_LAUGHTER.has(source);
+ if(!pureSet.has(source))e.lastSpokenDialogue=source;
+ if(laughing)e.lastCaptionWasPure=pureSet.has(source);
  return source;
 }
 function ryuDialogueLevel(e){return e.captive?(e.breakDamage>80?2:e.breakDamage>50?1:0):0;}
@@ -321,7 +408,7 @@ function emitRyuDialogue(e,laughing=true){
  floatText(tr(source),x,y,laughing?(level===2?'#ec55b2':'#f3cbff'):'#e6d3ac',style);
  // Classify the source key before translation so all three languages share
  // the same reading pause. Pure laughter retains its original cadence.
- if(laughing){const pureLaughter=RYU_PURE_LAUGHTER.has(source);e.featherTextCooldown=pureLaughter?(level===2?.65:.9):(level===2?1.6:2);}
+ if(laughing){const pureLaughter=dialoguePureSet(e).has(source);e.featherTextCooldown=pureLaughter?(level===2?.65:.9):(level===2?1.6:2);}
  return source;
 }
 function updateBoundDialogue(e,dt){
@@ -347,9 +434,15 @@ function featherIntersectsPolygon(a,b){
  if(a.some(p=>inside(p,b))||b.some(p=>inside(p,a)))return true;
  return a.some((p,i)=>b.some((r,j)=>{const q=a[(i+1)%a.length],s=b[(j+1)%b.length];return (cross(p,q,r)*cross(p,q,s)<0&&cross(r,s,p)*cross(r,s,q)<0)||on(p,q,r)||on(p,q,s)||on(r,s,p)||on(r,s,q);}));
 }
+// Shared coverage policy for all mouse tools. Shoes block every tool;
+// feathers need exposed skin, while ghost hands and brushes retain cloth contact.
+function mouseToolAllowsCoverage(coverage,tool=Laughter.equipped){
+ return coverage!=='shoes'&&(tool!==0||coverage==='skin');
+}
 function boundFeatherRegion(e,wx,wy,polygon=featherAttackPolygon(wx,wy)){return boundFeatherWeakness(e,wx,wy,polygon)>0;}
 function boundFeatherWeakness(e,wx,wy,polygon=featherAttackPolygon(wx,wy)){
  if(e.hp<=0||e.bind<=0)return 0;
+ if(newEnemy(e))return EnemyRoster.weakness(e,polygon);
  const scale=bindingScale(e);
  const localPolygon=polygon.map(([x,y])=>[(x-e.x)*(e.bindVariant?1:e.face)/scale,(y-(FLOOR+e.y))/scale]);
  if(e.bindVariant===2){if(VINE_HURT_POLYGONS.slice(1).some(region=>featherIntersectsPolygon(localPolygon,region)))return 2;return featherIntersectsPolygon(localPolygon,VINE_HURT_POLYGONS[0])?1:0;}
@@ -360,16 +453,20 @@ function boundFeatherWeakness(e,wx,wy,polygon=featherAttackPolygon(wx,wy)){
   [[-43,-203,43,-128],[-32,-35,32,18]]:
   [[-52,-195,-27,-126],[27,-195,52,-126],[-32,-35,32,18]];
  if(featherIntersectsRect(localPolygon,regions[regions.length-1]))return 2;
+ // Existing bare-arm and shirtless regions remain valid; only the ghost adds shirt contact.
+ if(e.bindVariant===0&&!e.shirtless&&Laughter.equipped===3&&featherIntersectsRect(localPolygon,[-27,-195,27,-126]))return 1;
  return regions.slice(0,-1).some(rect=>featherIntersectsRect(localPolygon,rect))?1:0;
 }
 function bindingLaughSpeed(e){return e.captive?(e.breakDamage>80?(e.bindVariant===0?1.5:2):e.breakDamage>50?1.5:1):1;}
-function boundLaughTextY(e){return FLOOR+e.y+(-bindingHeight(e)+(e.bindVariant===2?48:e.bindVariant?-8:70))*bindingScale(e);}
+function boundLaughTextY(e){return FLOOR+e.y+(-bindingHeight(e)+(newEnemy(e)?(e.bindVariant===1?-8:42):e.bindVariant===2?48:e.bindVariant?-8:70))*bindingScale(e);}
 const bindingVoiceHistory=[];
 function playBindingVoice(e){
+ if(newEnemy(e)){EnemyRoster.boundVoice(e);return;}
  const choices=[1,2,3,4,5,6].filter(id=>!bindingVoiceHistory.includes(id)),id=choices[Math.floor(Math.random()*choices.length)];
  if(RyuAudio.play('hit-'+id,{owner:e,channel:'voice',volume:.5,onEnded:()=>{if(e.hp<=0&&paused&&![...RyuAudio.active].some(a=>a.owner?.state==='defeated'&&a.channel==='voice'))audio?.suspend().catch(()=>{});}})){bindingVoiceHistory.push(id);if(bindingVoiceHistory.length>2)bindingVoiceHistory.shift();}
 }
 function updateFeatherRecovery(e){
+ if(newEnemy(e)){if(paused)return;if(e.featherHit&&!e.rosterReacting){EnemyRoster.boundVoice(e);e.rosterReacting=true;}if(!e.featherHit)e.rosterReacting=false;e.featherRecoveryPending=false;return;}
  if(RyuAudio.hasLaughClips()){
   if(paused)return;
   RyuAudio.setLaughing(e,e.hp>0&&(e.featherHit||e.bindLaugh>0||e.hands>0||e.state==='laugh'),e.featherHit&&e.featherWeakness===2?'super':'normal');
@@ -379,7 +476,7 @@ function updateFeatherRecovery(e){
  if(e.hp<=0||e.bind<=0){e.featherRecoveryPending=false;return;}
  if(e.featherHit||e.bindLaugh>0||e.hands>0)return;
  e.featherRecoveryPending=false;
- RyuAudio.play('dizzy',{owner:e,channel:'voice',volume:.5});
+ if(!newEnemy(e))RyuAudio.play('dizzy',{owner:e,channel:'voice',volume:.5});
 }
 function setFeatherContact(e,contact,silent=false){
  const previous=e.featherHit;e.featherHit=contact;
@@ -395,9 +492,11 @@ function updateMouseFeather(dt,silent=false){
  if(!active){mouseFeather.hover=false;if(!paused)for(const e of targets)setFeatherContact(e,false,silent||(!running&&gameMode!=='prison'));return;}
  const wx=mouseFeather.x+camera,wy=mouseFeather.y;
  const nearby=targets.filter(e=>e.hp>0).sort((a,b)=>Math.abs(wx-a.x)-Math.abs(wx-b.x))[0];
- mouseFeather.facing=nearby&&wx<nearby.x?1:-1;
+ const targetFacing=nearby&&wx<nearby.x?1:-1;
+ // A1 points right in its source art; both rendering and contact mirror toward the target.
+ mouseFeather.facing=targetFacing;
  const flutter=mouseFeather.hover?Math.sin((gameMode==='prison'?Dungeon.time:clock)*Math.PI*2/.8):0;
- mouseFeather.angle=flutter*12;mouseFeather.lift=flutter*4;
+ mouseFeather.angle=Laughter.equipped>0?0:flutter*12;mouseFeather.lift=Laughter.equipped>0?0:flutter*4;
  const attackPolygon=featherAttackPolygon(wx,wy);
  const target=targets.find(e=>boundFeatherRegion(e,wx,wy,attackPolygon));
  for(const e of targets){e.featherWeakness=e===target?boundFeatherWeakness(e,wx,wy,attackPolygon):0;setFeatherContact(e,e===target,silent);}
@@ -471,21 +570,35 @@ function wardrobeTarget(){
  return enemies.filter(e=>e.hp>0&&e.bind>0).sort((a,b)=>Math.abs(a.x-player.x)-Math.abs(b.x-player.x))[0]||null;
 }
 function toggleWardrobe(){
- const e=wardrobeTarget();if(!e||e.bindVariant!==0)return;
+ const e=wardrobeTarget();if(!e||newEnemy(e)||e.bindVariant!==0)return;
  e.shirtless=!e.shirtless;spark(e.x,FLOOR+e.y-150,'#dcb0ff',12);canvas.focus();updateInteraction();
  updateMouseFeather(0,true);
  if(gameMode==='prison')Dungeon.savePrisoner();
 }
+function canCycleFootwear(e){return gameMode==='prison'&&!!e&&e.kind==='red-ranger'&&e.bind>0&&e.bindVariant===1;}
+function footwearButtonText(e){const current=EnemyRoster.footwear(e);return tr({'boots':'靴子 → 白襪','socks':'白襪 → 光腳','bare':'光腳 → 靴子'}[current]);}
+function cycleMummyFootwear(){
+ const e=wardrobeTarget();if(!canCycleFootwear(e)||paused)return;
+ const order=['boots','socks','bare'];e.mummyFootwear=order[(order.indexOf(EnemyRoster.footwear(e))+1)%order.length];
+ updateMouseFeather(0,true);updateInteraction();if(gameMode==='prison')Dungeon.savePrisoner();canvas.focus();
+}
+function canToggleHelmet(e){return gameMode==='prison'&&!!e&&e.kind==='red-ranger'&&e.bind>0&&[0,1].includes(e.bindVariant);}
+function helmetButtonText(e){return tr(e?.mummyUnhelmet?'戴上頭盔':'取下頭盔');}
+function toggleMummyHelmet(){
+ const e=wardrobeTarget();if(!canToggleHelmet(e)||paused)return;
+ e.mummyUnhelmet=!e.mummyUnhelmet;updateMouseFeather(0,true);updateInteraction();
+ if(gameMode==='prison')Dungeon.savePrisoner();canvas.focus();
+}
 function toggleBindingVariant(){
  if(!Laughter.owns(1))return;
- const e=wardrobeTarget();if(!e)return;
+ const e=wardrobeTarget();if(!enemySupportsBinding(e,1))return;
  e.bindVariant=e.bindVariant===1?0:1;e.y=bindingY(e);spark(e.x,FLOOR+e.y-150,'#9b8cff',14);canvas.focus();updateInteraction();
  updateMouseFeather(0,true);playBindingVoice(e);
  if(gameMode==='prison')Dungeon.savePrisoner();
 }
 function toggleVineBinding(){
  if(gameMode!=='prison'||!Laughter.owns(2))return;
- const e=wardrobeTarget();if(!e)return;
+ const e=wardrobeTarget();if(!e||newEnemy(e))return;
  e.bindVariant=e.bindVariant===2?0:2;e.y=bindingY(e);spark(e.x,FLOOR+e.y-190,'#9b8cff',18);canvas.focus();updateInteraction();
  updateMouseFeather(0,true);playBindingVoice(e);
  if(gameMode==='prison')Dungeon.savePrisoner();
@@ -496,17 +609,19 @@ function updateInteraction(){
  $('#dungeon-open').hidden=title||!ready||gameMode!=='battle';$('#dungeon-open').disabled=title;
  $('#new-game').disabled=!ready;
  if(title){$('#magic-available').hidden=true;$('#shop-guide-arrow').hidden=true;}
- const button=$('#wardrobe'),variantButton=$('#binding-variant'),vineButton=$('#binding-vine'),e=wardrobeTarget();
- button.hidden=!e||gameMode!=='battle'||e.bindVariant!==0;
- if(variantButton)variantButton.hidden=!e||gameMode!=='battle'||!Laughter.owns(1);
+ const button=$('#wardrobe'),variantButton=$('#binding-variant'),vineButton=$('#binding-vine'),footwearButton=$('#mummy-footwear'),helmetButton=$('#mummy-helmet'),e=wardrobeTarget();
+ button.hidden=!e||newEnemy(e)||gameMode!=='battle'||e.bindVariant!==0;
+ if(variantButton)variantButton.hidden=!enemySupportsBinding(e,1)||gameMode!=='battle'||!Laughter.owns(1);
  if(vineButton)vineButton.hidden=true;
+ if(footwearButton){footwearButton.hidden=gameMode!=='battle'||!canCycleFootwear(e);footwearButton.disabled=paused;if(canCycleFootwear(e))footwearButton.textContent=footwearButtonText(e);}
+ if(helmetButton){helmetButton.hidden=gameMode!=='battle'||!canToggleHelmet(e);helmetButton.disabled=paused;helmetButton.textContent=helmetButtonText(e);helmetButton.setAttribute('aria-pressed',String(e?.mummyUnhelmet===true));}
  if(gameMode==='prison'){Dungeon.updateControls();return;}
  if(!e)return;
  button.textContent=e.shirtless?tr('恢復上衣 · E'):tr('切換無上衣 · E');
  button.style.left=Math.min(88,Math.max(12,(e.x-camera)/960*100))+'%';
  // Stack from the bottom in CSS pixels so the third button stays reachable
  // even when the canvas is scaled down. Do not follow the character's bob.
- const controls=[button,variantButton].filter(control=>control&&!control.hidden);
+ const controls=[button,variantButton,footwearButton,helmetButton].filter(control=>control&&!control.hidden);
  let bottom=8;
  for(let i=controls.length-1;i>=0;i--){const control=controls[i];control.style.left=button.style.left;control.style.top='auto';control.style.bottom=bottom+'px';control.style.transform='translateX(-50%)';bottom+=(control.getBoundingClientRect?.().height||40)+6;}
  if(variantButton)variantButton.textContent=e.bindVariant===1?tr('恢復普通禁錮'):tr('切換木乃伊禁錮');
@@ -521,7 +636,7 @@ function bindEnemy(e){
 function bindingHurtboxes(e){
  if(e.bind>0)return [[e.x-(e.bindVariant===2?78:e.bindVariant?40:52),FLOOR+e.y-bindingHeight(e),e.x+(e.bindVariant===2?78:e.bindVariant?40:52),FLOOR+e.y]];
  if(e.state==='laugh')return [[e.x-32,FLOOR+e.y-170,e.x+32,FLOOR+e.y]];
- const boxes=RyuAssets.boxes(e.anim,e.state==='attack'?Math.max(0,e.t-MOVES[e.move].windup):e.t,e.x,FLOOR+e.y,e.face,'hurt',e.state==='idle');
+ const boxes=enemyAssets(e).boxes(e.anim,e.state==='attack'?Math.max(0,e.t-MOVES[e.move].windup):e.t,e.x,FLOOR+e.y,e.face,'hurt',e.state==='idle');
  // Intro/recovery AIR frames may omit combat boxes but still accept magic.
  return boxes.length?boxes:[[e.x-32,FLOOR+e.y-170,e.x+32,FLOOR+e.y]];
 }
@@ -585,13 +700,14 @@ function gameover(){
 function beginMove(e,name){
  changeState(e,'attack',name);e.move=name;e.face=player.x<e.x?-1:1;e.hitDone=e.castDone=false;
  e.attackVoiceDone=e.attackSwingDone=false;
- const frames=RyuAssets.clips[name].frames;let ticks=0;e.attackSwingAt=0;
+ const frames=enemyAssets(e).clips[name].frames;let ticks=0;e.attackSwingAt=0;
  for(const frame of frames){if(frame.hit?.length){e.attackSwingAt=ticks/60;break;}ticks+=frame.ticks;}
  e.cool=.48+Math.random()*.42;
- if(['hadouken','shoryuken','tatsu'].includes(name))e.special=3.1+Math.random()*1.8;
+ if(MOVES[name]?.special||['hadouken','shoryuken','tatsu'].includes(name))e.special=3.1+Math.random()*1.8;
 }
 function pick(values){return values[Math.floor(Math.random()*values.length)];}
 function chooseAction(e){
+ if(newEnemy(e)){EnemyRoster.choose(e);return;}
  const dist=Math.abs(player.x-e.x);e.face=player.x<e.x?-1:1;
  const busy=enemies.some(o=>o!==e&&o.hp>0&&o.state==='attack'&&Math.abs(o.x-player.x)<220);
  const incoming=shots.find(p=>p.dir*(e.x-p.x)>0&&Math.abs(e.x-p.x)<230);
@@ -652,7 +768,7 @@ function updateEnemy(e,dt){
    RyuAudio.stopOwner(e);e.featherRecoveryPending=false;e.featherHit=false;
    e.bind=0;e.bindElapsed=e.bindLaugh=e.bindLaughElapsed=0;spark(e.x,FLOOR-85,'#bd82ff');
    if(e.hands>0)changeState(e,'laugh','stagger');else changeState(e,'recover','stagger',.26);
-   RyuAudio.play('dizzy',{owner:e,channel:'voice',volume:.5});
+   if(!newEnemy(e))RyuAudio.play('dizzy',{owner:e,channel:'voice',volume:.5});
   }
   updateBoundDialogue(e,dt);updateFeatherRecovery(e);return;
  }
@@ -666,8 +782,9 @@ function updateEnemy(e,dt){
   e.y=-Math.sin(Math.min(1,e.t/.55)*Math.PI)*30;
   if(e.t>=.55)changeState(e,'down','down',.28);return;
  }
- if(e.state==='down'){if(e.t>=e.stateLength)changeState(e,'recover','getup',RyuAssets.duration('getup'));return;}
+ if(e.state==='down'){if(e.t>=e.stateLength)changeState(e,'recover','getup',enemyAssets(e).duration('getup'));return;}
  if(e.state==='attack'){
+  if(newEnemy(e)){EnemyRoster.attack(e,dt);return;}
   const m=MOVES[e.move],at=e.t-m.windup,duration=RyuAssets.duration(e.move);
   if(at<0)return;
   const attackSound=RYU_ATTACK_AUDIO[e.move];
@@ -705,7 +822,7 @@ function updateEnemy(e,dt){
  }
  chooseAction(e);
  if(e.state==='idle'){
-  e.anim=e.posture;const speed=e.posture==='walk'?125:e.posture==='back'?-85:0;
+  e.anim=e.posture;const speed=e.posture==='walk'?(newEnemy(e)?EnemyRoster.get(e).walk:125):e.posture==='back'?-85:0;
   e.x+=e.face*speed*dt;
  }
 }
@@ -718,7 +835,7 @@ function update(dt){
  player.moving=dir!==0;if(dir){player.face=dir;player.x=Math.max(65,player.x+dir*190*dt);}
  if(keys.has('j'))cast(0);if(keys.has('l'))cast(2);
  camera=Math.max(0,player.x-300);world=Math.max(world,player.x-220);
- if(kills>0&&player.x+680>spawnAt&&enemies.filter(e=>e.hp>0).length<3){enemies.push(enemy(spawnAt));spawnAt+=560+Math.random()*150;}
+ if(kills>0&&player.x+680>spawnAt&&enemies.filter(e=>e.hp>0).length<3){enemies.push(enemy(spawnAt,typeof EnemyRoster!=='undefined'?EnemyRoster.next():'ryu'));spawnAt+=560+Math.random()*150;}
  updateMelee(dt);updateMouseFeather(dt);
  for(const e of enemies){updateEnemy(e,dt);if(!running)break;}
  updateBindingShots(dt);
@@ -726,7 +843,7 @@ function update(dt){
   const old=p.x;p.x+=p.dir*510*dt;p.life-=dt;
   for(const e of enemies){
    if(e.hp<=0)continue;
-   let boxes=RyuAssets.boxes(e.anim,e.state==='attack'?Math.max(0,e.t-MOVES[e.move].windup):e.t,e.x,FLOOR+e.y,e.face,'hurt',e.state==='idle');
+   let boxes=enemyAssets(e).boxes(e.anim,e.state==='attack'?Math.max(0,e.t-MOVES[e.move].windup):e.t,e.x,FLOOR+e.y,e.face,'hurt',e.state==='idle');
    if(e.state==='laugh'||e.bind>0)boxes=[[e.x-32,FLOOR+e.y-170,e.x+32,FLOOR+e.y]];
    const swept=[Math.min(old,p.x)-10,p.y-10,Math.max(old,p.x)+10,p.y+10];
    if(boxes.some(b=>intersects(b,swept))){hit(e,18);p.life=0;break;}
@@ -734,7 +851,7 @@ function update(dt){
  }
  for(const p of enemyShots){
   p.t+=dt;p.life-=dt;if(p.ended){p.ended+=dt;continue;}
-  const old=p.x;p.x+=p.dir*340*dt;
+  const old=p.x;p.x+=p.dir*(p.speed||340)*dt;
   if(intersects([Math.min(old,p.x)-22,p.y-20,Math.max(old,p.x)+22,p.y+20],[player.x-25,FLOOR-152,player.x+25,FLOOR])){
    if(hurtPlayer(p.damage)){p.ended=.001;p.t=0;RyuAudio.play('impact-7',{volume:.36});}
   }
@@ -758,6 +875,7 @@ function drawBinding(e){
  ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);ctx.translate(-x,-y);drawBindingSprite(e);ctx.restore();
 }
 function drawBindingSprite(e){
+ if(newEnemy(e)){EnemyRoster.drawBinding(e);return;}
  const sequence=[0,1,2,1,0,3,2,3];
  if(e.bindVariant===2){
   const laughing=e.bindLaugh>0||e.featherHit;
@@ -782,6 +900,7 @@ function drawBindingSprite(e){
  ctx.drawImage(sprite,-w/2,-BIND_HEIGHT,w,BIND_HEIGHT);ctx.restore();
 }
 function drawNormalHit(e){
+ if(newEnemy(e)){enemyAssets(e).draw(ctx,e.t<.18?'hit':'dizzy',e.t,e.x-camera,FLOOR+e.y,e.face,{loop:e.t>=.18});return;}
  const sequence=[2,3,2,3],i=e.t<.09?0:e.t<.18?1:sequence[Math.floor((e.t-.18)*9)%sequence.length];
  const sprite=(e.shirtless?bareHitFrames:normalHitFrames)[i];if(!sprite)return;
  const scale=RyuAssets.scale;
@@ -794,18 +913,18 @@ function drawEnemy(e){
  const laughing=e.state==='laugh'&&e.bind<=0;
  if(e.hp<=0){
   const falling=e.t<DEFEAT_FALL_DURATION;
-  RyuAssets.draw(ctx,falling?'fall':'down',falling?e.t/DEFEAT_FALL_DURATION*RyuAssets.duration('fall'):0,x,FLOOR+e.y,e.face,{shirtless:e.shirtless});
+  enemyAssets(e).draw(ctx,falling?'fall':'down',falling?e.t/DEFEAT_FALL_DURATION*enemyAssets(e).duration('fall'):0,x,FLOOR+e.y,e.face,{shirtless:e.shirtless});
  }
  else if(e.bind>0){drawBinding(e);}
  else if(laughing){drawNormalHit(e);}
  else {
   let name=e.anim,time=e.t,loop=e.state==='idle'||e.state==='guard'||e.state==='crouchGuard';
   if(e.state==='attack'){const windup=MOVES[e.move].windup;name=e.t<windup?'idle':e.move;time=Math.max(0,e.t-windup);}
-  RyuAssets.draw(ctx,name,time,x,FLOOR+e.y,e.face,{loop,shirtless:e.shirtless});
+  enemyAssets(e).draw(ctx,name,time,x,FLOOR+e.y,e.face,{loop,shirtless:e.shirtless});
  }
  if(e.hp>0&&!e.captive){
   const top=e.bind>0?FLOOR+e.y-bindingHeight(e)+(e.bindVariant===2?0:e.bindVariant?-48:-24):232+e.y;bar(x-43,top+10,86,e.hp/100,'#52c878');
-  const label=e.bind>0?tr('禁錮 ')+e.bind.toFixed(1)+'s':laughing?tr('忍笑…'):e.state==='attack'?tr(MOVES[e.move].label):e.state==='guard'||e.state==='crouchGuard'||e.state==='guardHit'?tr('防禦'):e.state==='recover'?tr('起身調整'):tr('隆');
+  const label=e.bind>0?tr('禁錮 ')+e.bind.toFixed(1)+'s':laughing?tr('忍笑…'):e.state==='attack'?tr(MOVES[e.move].label):e.state==='guard'||e.state==='crouchGuard'||e.state==='guardHit'?tr('防禦'):e.state==='recover'?tr('起身調整'):enemyName(e);
   text(label,x,top,12,e.bind>0?'#d9bbff':'#f1dfd0','center');
   if(e.state==='attack'&&e.t<MOVES[e.move].windup){text('!',x,top-23,22,'#ffb68c','center');}
  }
@@ -869,12 +988,12 @@ function draw(){
  }
  for(const p of shots){ctx.save();ctx.translate(p.x-camera,p.y+Math.sin(clock*18)*4);ctx.scale(p.dir,1);ctx.shadowColor='#d69cff';ctx.shadowBlur=18;text('❧',0,0,40,'#edceff','center');ctx.restore();}
  for(const p of bindingShots)drawBindingRing(p);
- for(const p of enemyShots)RyuAssets.draw(ctx,p.ended?'fireballEnd':'fireball',p.t,p.x-camera,p.y,p.dir,{loop:!p.ended,scale:1.4});
+ for(const p of enemyShots)enemyAssets(p).draw(ctx,p.ended?'fireballEnd':p.clip||'fireball',p.t,p.x-camera,p.y,p.dir,{loop:!p.ended,scale:p.kind?enemyAssets(p).scale:1.4});
  for(const p of effects){ctx.globalAlpha=p.life*2;ctx.fillStyle=p.color;ctx.fillRect(p.x-camera,p.y,4,4);}ctx.globalAlpha=1;
  for(const t of texts)drawCaption(t);ctx.globalAlpha=1;ctx.restore();
  ctx.fillStyle='#100d20dc';ctx.fillRect(22,20,255,67);text(tr('黑袍巫師'),37,44,16);text(tr('體力'),37,72,11,'#ae9abd');bar(73,62,180,player.hp/100,'#bf98ec');text(Math.ceil(player.hp)+'',253,44,13,'#d7c0f6','right');
  ctx.fillStyle='#100d20cc';ctx.fillRect(663,20,135,67);text(String(kills).padStart(2,'0'),678,52,24,'#f2d59e');text(tr('已擊敗'),717,48,11,'#bba5c8');text(Math.floor(world/10)+' m',781,73,13,'#e8daf8','right');
- text(tr('都市夜巷'),480,38,13,'#e8d7f7','center');text('— SF III RYU —',480,58,11,'#ad8bcb','center');
+ text(tr('都市夜巷'),480,38,13,'#e8d7f7','center');text('— ARCADE CROSSOVER —',480,58,11,'#ad8bcb','center');
  if(combo>1&&comboTime>0)text(combo+tr(' 連擊'),42,139,25,'#edcba2');
  if(running&&kills>0)text('GO →',880,480+Math.sin(clock*3)*3,18,'#e8c390','center');
 }
@@ -883,6 +1002,7 @@ function frame(t){
  Laughter.tick();
  if(!paused&&(running||gameMode==='prison')){for(const e of gameMode==='prison'?[Dungeon.prisoner].filter(Boolean):enemies)updateFeatherRecovery(e);RyuAudio.tickReactions();}
  if(typeof Onboarding!=='undefined')Onboarding.tick();
+ if(typeof CursorTools!=='undefined')CursorTools.tick();
  if(typeof MagicShop!=='undefined')MagicShop.tick();
  syncFeatherMetrics();
  const dt=Math.min((t-last)/1000||0,.1);last=t;
@@ -898,6 +1018,8 @@ canvas.onpointermove=canvas.onpointerenter=trackFeather;
 canvas.onpointerleave=canvas.onpointercancel=()=>{mouseFeather.inside=false;updateMouseFeather(0);};
 canvas.onpointerdown=e=>{if(e.button!==0)return;e.preventDefault();trackFeather(e);cast(1,mouseFeather.x+camera);canvas.focus();};
 $('#melee').onclick=meleeAttack;$('#wardrobe').onclick=e=>{e.stopPropagation();toggleWardrobe();};$('#binding-variant').onclick=e=>{e.stopPropagation();toggleBindingVariant();};$('#binding-vine').onclick=e=>{e.stopPropagation();toggleVineBinding();};
+$('#mummy-footwear').onclick=e=>{e.stopPropagation();cycleMummyFootwear();};
+$('#mummy-helmet').onclick=e=>{e.stopPropagation();toggleMummyHelmet();};
 $('#start').onclick=start;$('#pause').onclick=pause;$('#resume').onclick=pause;$('#restart').onclick=start;
 $('#new-game').onclick=newGame;
 $('#sound').onclick=()=>{sound=!sound;RyuAudio.setEnabled(sound);$('#sound').textContent=tr(sound?'♫ 音效：開':'♫ 音效：關');$('#sound').setAttribute('aria-label',tr(sound?'關閉音效':'開啟音效'));if(sound){unlockGameAudio();if(!paused)tone(700);}else audio?.suspend().catch(()=>{});};
@@ -934,7 +1056,7 @@ function refreshLanguage(){
  $('#overlay h1').innerHTML=ended?tr('魔力需要<br><em>休息一下。</em>'):tr('今夜，讓對手')+'<br><em>'+tr('笑著認輸。')+'</em>';
  $('#overlay p').innerHTML=ended?tr('本次探索 {meters} 米 · 擊敗 {kills} 位對手',{meters:Math.floor(world/10),kills}):tr('點擊滑鼠，發射禁錮魔法。')+'<br>'+tr('移動羽毛滑鼠，對禁錮的敵人進行搔癢攻擊。');
  $('#start').innerHTML=ended?tr('再來一次 <span>↵</span>'):tr('開始冒險')+' <span>↵</span>';
- $('#load').textContent=tr(ended?'用禁錮打斷起手；看到波動拳時，閃避穿過。':loadFailed?'素材載入失敗，請重新整理重試':ready?'隆的戰鬥動作已就緒 · 按 Enter 開始':'正在喚醒魔法…');
+ $('#load').textContent=tr(ended?'用禁錮打斷起手；看到波動拳時，閃避穿過。':loadFailed?'素材載入失敗，請重新整理重試':ready?'兩位對手已就緒 · 按 Enter 開始':'正在喚醒魔法…');
  for(let i=0;i<3;i++){const label=$('#cd'+i);if(label)label.textContent=player.cd[i]>.05?player.cd[i].toFixed(1)+'s':tr('就緒');}
  updateInteraction();
  if(typeof Dungeon!=='undefined')Dungeon.refresh();

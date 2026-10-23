@@ -1,10 +1,12 @@
 'use strict';
 const MagicShop=(()=>{
  const dialog=document.querySelector('#magic-shop'),bank=document.querySelector('#laughter-bank');
- const items=[{id:1,name:'木乃伊禁錮',price:35,description:'黑色繃帶纏繞 · 戰鬥與地牢可用'},{id:2,name:'藤蔓禁錮',price:100,description:'彎曲黑藤纏繞 · 地牢專屬'}];
+ const items=[{id:1,name:'木乃伊禁錮',price:35,description:'黑色繃帶纏繞 · 戰鬥與地牢可用'},{id:2,name:'藤蔓禁錮',price:100,description:'彎曲黑藤纏繞 · 地牢專屬'},...CursorTools.items.filter(i=>i.id>0)];
+ for(const item of items.filter(i=>i.id>2)){const card=document.createElement('article');card.className='shop-item';card.id=`shop-item-${item.id}`;card.innerHTML=`<h3></h3><canvas id="shop-icon-${item.id}" width="48" height="48" aria-hidden="true"></canvas><button type="button"></button><p></p>`;dialog.querySelector('.shop-items').append(card);}
  let returnPaused=false,returnFocus=null,guide=false,lastState='',rewardId=0,rewardStart=0;
  const reward=document.querySelector('#magic-unlocked'),preview=document.querySelector('#unlock-preview');
  function icon(canvas,id){
+  if(id>2){CursorTools.draw(canvas,id,0,true);return;}
   const g=canvas.getContext('2d');canvas.width=canvas.height=48;g.imageSmoothingEnabled=false;
   const rect=(x,y,w,h,c)=>{g.fillStyle=c;g.fillRect(x,y,w,h);};
   const palette=['#173766','#244d8b','#3a54a0','#5356ab','#6953aa','#704497'];
@@ -32,7 +34,7 @@ const MagicShop=(()=>{
   const hint=document.querySelector('#magic-available');hint.hidden=!available;hint.textContent=tr('新魔法可習得');
   document.querySelector('#shop-guide-arrow').hidden=true;
   bank.classList.remove('shop-invitation');
-  document.querySelector('#unlock-title').textContent=tr(rewardId===2?'藤蔓禁錮':'木乃伊禁錮');
+  document.querySelector('#unlock-title').textContent=tr(items.find(i=>i.id===rewardId)?.name||'木乃伊禁錮');
   document.querySelector('#unlock-message').textContent=tr('恭喜解鎖新的魔法，快去試試吧！');
   document.querySelector('#unlock-close').textContent=tr('去試試');
   document.querySelector('#shop-guide-text').hidden=!guide||Laughter.owns(1);
@@ -47,13 +49,13 @@ const MagicShop=(()=>{
   }
  }
  function drawReward(){
-  if(!reward.open)return;const g=preview.getContext('2d'),frames=rewardId===2?vineFrames:mummyFrames,fps=rewardId===2?vineBindingLayout.fps:6;
+  if(!reward.open)return;if(rewardId>2){CursorTools.draw(preview,rewardId,(performance.now()-rewardStart)/1000,true);return;}const g=preview.getContext('2d'),frames=rewardId===2?vineFrames:mummyFrames,fps=rewardId===2?vineBindingLayout.fps:6;
   const sprite=frames[Math.floor((performance.now()-rewardStart)/1000*fps)%frames.length];if(!sprite)return;
   g.imageSmoothingEnabled=false;g.fillStyle='#17162c';g.fillRect(0,0,360,300);
   for(let y=0;y<300;y+=20)for(let x=0;x<360;x+=20){g.fillStyle=(x+y)%40?'#20213b':'#272440';g.fillRect(x+1,y+1,18,18);}
   const scale=Math.min(310/sprite.width,278/sprite.height),w=sprite.width*scale,h=sprite.height*scale;g.drawImage(sprite,Math.round((360-w)/2),Math.round(294-h),Math.round(w),Math.round(h));
  }
- function tick(){const state=[running,gameMode,I18n.language,Math.floor(Laughter.amount),Laughter.owns(1),Laughter.owns(2),Laughter.tutorialPending,dialog.open,guide,rewardId,reward.open].join('|');if(state!==lastState){lastState=state;refresh();}drawReward();}
+ function tick(){const state=[running,gameMode,I18n.language,Math.floor(Laughter.amount),Laughter.owns(1),Laughter.owns(2),Laughter.owns(3),Laughter.owns(4),Laughter.tutorialPending,dialog.open,guide,rewardId,reward.open].join('|');if(state!==lastState){lastState=state;refresh();}drawReward();if(dialog.open)for(const item of items.filter(i=>i.id>2))CursorTools.draw(document.querySelector(`#shop-icon-${item.id}`),item.id,performance.now()/1000,true);}
  function showReward(id){rewardId=id;rewardStart=performance.now();reward.showModal();tick();document.querySelector('#unlock-close').focus();}
  function dismissReward(){if(!reward.open)return;reward.close();close();}
  reward.addEventListener('cancel',e=>{e.preventDefault();dismissReward();});document.querySelector('#unlock-close').onclick=dismissReward;

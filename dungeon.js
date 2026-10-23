@@ -3,13 +3,15 @@
 // Battle objects and clocks remain in place and are never advanced here.
 const Dungeon=(()=>{
  const storageKey='feather-arcade.dungeon.v1';
+ const isVisible=record=>typeof EnemyRoster==='undefined'?record.kind==='ryu':EnemyRoster.isEnabled(record.kind);
+ const visibleRecords=()=>records.filter(isVisible);
  let records=[],selected=null,prisoner=null,time=0,returnPaused=false,particles=[],captions=[],guideSeen=false;
  const gallery=$('#dungeon-gallery'),track=$('#dungeon-cells'),viewport=$('#dungeon-viewport');
  let drag=null,suppressClick=false,portraits=[];
  try{
   const saved=JSON.parse(localStorage.getItem(storageKey)||'null');
   guideSeen=saved?.guideSeen===true||(saved?.guideSeen===undefined&&saved?.enemies?.length>0);
-  if(saved?.version===1&&Array.isArray(saved.enemies))records=saved.enemies.filter(r=>r&&typeof r.id==='string'&&r.kind==='ryu').map(r=>({id:r.id,kind:'ryu',shirtless:r.shirtless===true,bindVariant:[0,1,2].includes(r.bindVariant)?r.bindVariant:0}));
+  if(saved?.version===1&&Array.isArray(saved.enemies))records=saved.enemies.filter(r=>r&&typeof r.id==='string'&&(r.kind==='ryu'||(typeof EnemyRoster!=='undefined'&&EnemyRoster.get(r.kind)))).map(r=>({id:r.id,kind:r.kind,shirtless:r.kind==='ryu'&&r.shirtless===true,bindVariant:[0,1,2].includes(r.bindVariant)?r.bindVariant:0,mummyUnhelmet:r.kind==='red-ranger'&&r.mummyUnhelmet===true,mummyFootwear:['boots','socks','bare'].includes(r.mummyFootwear)?r.mummyFootwear:'boots'}));
  }catch{}
  // One collection entry per character; retain the first existing Ryu/outfit.
  const unique=new Set();records=records.filter(r=>!unique.has(r.kind)&&unique.add(r.kind));save();
@@ -17,20 +19,20 @@ const Dungeon=(()=>{
  function acknowledgeTutorial(){guideSeen=true;save();}
  function resetProgress(){records=[];selected=prisoner=null;particles=[];captions=[];portraits=[];time=0;guideSeen=false;save();}
  function capture(e){
-  if(e.dungeonRecorded||e.captive)return;
+  if(e.dungeonRecorded||e.captive||!isVisible(e))return;
   e.dungeonRecorded=true;
-  if(records.some(r=>r.kind==='ryu'))return;
-  records.push({id:globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`,kind:'ryu',shirtless:!!e.shirtless,bindVariant:0});
+  if(records.some(r=>r.kind===(e.kind||'ryu')))return;
+  records.push({id:globalThis.crypto?.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`,kind:e.kind||'ryu',shirtless:!newEnemy(e)&&!!e.shirtless,bindVariant:0,mummyUnhelmet:e.kind==='red-ranger'&&e.mummyUnhelmet===true,mummyFootwear:e.mummyFootwear||'boots'});
   save();floatText(tr('已收錄地牢'),e.x,207,'#f2d59e');syncUI();
  }
- function savePrisoner(){if(gameMode!=='prison'||!prisoner||!selected)return;selected.shirtless=prisoner.shirtless;selected.bindVariant=0;save();}
+ function savePrisoner(){if(gameMode!=='prison'||!prisoner||!selected)return;selected.shirtless=prisoner.shirtless;selected.bindVariant=0;selected.mummyFootwear=prisoner.mummyFootwear||'boots';selected.mummyUnhelmet=prisoner.kind==='red-ranger'&&prisoner.mummyUnhelmet===true;save();}
  function clearInput(){keys.clear();mouseFeather.inside=false;mouseFeather.hover=false;mouseFeather.angle=mouseFeather.lift=0;for(const e of enemies)setFeatherContact(e,false,true);if(prisoner)setFeatherContact(prisoner,false,true);RyuAudio.stopAll();}
  function syncUI(){
   const battle=gameMode==='battle';
   $('.screen').classList.toggle('dungeon-mode',!battle);
   document.querySelectorAll('.controls,.touch,.ticker,footer').forEach(el=>el.hidden=!battle);
   $('#dungeon-open').hidden=!ready||!battle||!running;
-  $('#dungeon-open').textContent=tr('地牢')+(records.length?` · ${records.length}`:'');
+  $('#dungeon-open').textContent=tr('地牢')+(visibleRecords().length?` · ${visibleRecords().length}`:'');
   $('#dungeon-back').hidden=battle;$('#dungeon-back').textContent=tr(gameMode==='prison'?'返回地牢':'返回戰鬥');
   gallery.hidden=gameMode!=='collection';
   $('#prison-controls').hidden=gameMode!=='prison';
@@ -41,9 +43,9 @@ const Dungeon=(()=>{
   $('#pause').hidden=gameMode==='collection';
   $('#restart').hidden=!battle;
   $('#dungeon-heading').textContent=tr('地牢囚徒');
-  $('#dungeon-count').textContent=tr('已收錄 {count} 位敵人',{count:records.length});
-  $('#dungeon-hint').textContent=tr(records.length>3?'左右拖曳查看其他監獄':'擊敗敵人後，將在這裡收錄');
-  $('#dungeon-prev').hidden=$('#dungeon-next').hidden=records.length<=3;
+  $('#dungeon-count').textContent=tr('已收錄 {count} 位敵人',{count:visibleRecords().length});
+  $('#dungeon-hint').textContent=tr(visibleRecords().length>3?'左右拖曳查看其他監獄':'擊敗敵人後，將在這裡收錄');
+  $('#dungeon-prev').hidden=$('#dungeon-next').hidden=visibleRecords().length<=3;
   $('#dungeon-prev').setAttribute('aria-label',tr('上一組監獄'));$('#dungeon-next').setAttribute('aria-label',tr('下一組監獄'));
   $('#pause').textContent=tr(paused?'▶ 繼續':'Ⅱ 暫停');
   $('#scene-title').textContent=tr(battle?'CHAPTER 01 · 都市夜巷':'地下牢 · 永久禁錮');
@@ -52,14 +54,14 @@ const Dungeon=(()=>{
  function enter(){
   if(!ready||!running||gameMode!=='battle'||(typeof MagicShop!=='undefined'&&MagicShop.isOpen))return;
   if(typeof Onboarding!=='undefined'){if(Onboarding.active&&Onboarding.active!=='dungeon')return;Onboarding.complete('dungeon');}
-  if(records.length)acknowledgeTutorial();
+  if(visibleRecords().length)acknowledgeTutorial();
   returnPaused=paused;clearInput();paused=false;gameMode='collection';accumulator=0;
   if(sound)audio?.resume().catch(()=>{});
   renderGallery();syncUI();$('#dungeon-back').focus();
  }
  function visit(id){
-  const record=records.find(r=>r.id===id);if(!record||gameMode!=='collection'||(typeof MagicShop!=='undefined'&&MagicShop.isOpen))return;
-  clearInput();selected=record;prisoner=Object.assign(enemy(camera+480),{captive:true,hp:100,breakDamage:0,face:-1,state:'bound',bind:Infinity,bindVariant:0,shirtless:record.shirtless});
+  const record=records.find(r=>r.id===id);if(!record||!isVisible(record)||gameMode!=='collection'||(typeof MagicShop!=='undefined'&&MagicShop.isOpen))return;
+  clearInput();selected=record;prisoner=Object.assign(enemy(camera+480,record.kind),{captive:true,hp:100,breakDamage:0,face:-1,state:'bound',bind:Infinity,bindVariant:0,shirtless:record.shirtless,mummyUnhelmet:record.mummyUnhelmet===true,mummyFootwear:record.mummyFootwear||'boots'});
   prisoner.y=bindingY(prisoner);particles=[];captions=[];gameMode='prison';paused=false;accumulator=0;
   unlockGameAudio();
   syncUI();canvas.focus();playBindingVoice(prisoner);
@@ -79,21 +81,21 @@ const Dungeon=(()=>{
   c.dataset.frame=String(index);c.dataset.binding='default';c.dataset.facing='-1';
   if(c.width!==180||c.height!==232){c.width=180;c.height=232;}
   const g=c.getContext('2d');g.imageSmoothingEnabled=false;g.clearRect(0,0,180,232);
-  const sprite=(record.shirtless?bareBindingFrames:bindingFrames)[index];
+  const sprite=(newEnemy(record)?EnemyRoster.get(record).binding:record.shirtless?bareBindingFrames:bindingFrames)[index];
   if(!sprite)return;
   const scale=Math.min(164/sprite.width,216/sprite.height),w=sprite.width*scale,h=sprite.height*scale;
   g.save();g.translate(180,0);g.scale(-1,1);
   g.drawImage(sprite,Math.round((180-w)/2),Math.round(224-h),Math.round(w),Math.round(h));g.restore();
  }
  function renderGallery(){
-  track.replaceChildren();portraits=[];viewport.classList.toggle('can-scroll',records.length>3);
-  for(let i=0;i<Math.max(3,records.length);i++){
-   const record=records[i],cell=document.createElement(record?'button':'div');cell.className='prison-card'+(record?'':' empty-cell');
+  track.replaceChildren();portraits=[];viewport.classList.toggle('can-scroll',visibleRecords().length>3);
+  for(let i=0;i<Math.max(3,visibleRecords().length);i++){
+   const record=visibleRecords()[i],cell=document.createElement(record?'button':'div');cell.className='prison-card'+(record?'':' empty-cell');
    const number=document.createElement('span');number.className='cell-number';number.textContent=tr('監獄 {number}',{number:String(i+1).padStart(2,'0')});cell.append(number);
    const space=document.createElement('div');space.className='cell-room';
    if(record){const c=document.createElement('canvas');c.setAttribute('aria-hidden','true');portrait(c,record);portraits.push({canvas:c,record});space.append(c);}
    const bars=document.createElement('div');bars.className='cell-bars';space.append(bars);cell.append(space);
-   const name=document.createElement('strong');name.textContent=tr(record?'隆':'空監獄');cell.append(name);
+   const name=document.createElement('strong');name.textContent=record?enemyName(record):tr('空監獄');cell.append(name);
    const caption=document.createElement('span');caption.className='cell-caption';caption.textContent=tr(record?'點選進入':'尚未收錄');cell.append(caption);
    if(record){cell.type='button';cell.dataset.prisonId=record.id;cell.setAttribute('aria-label',tr('進入監獄 {number}',{number:i+1}));cell.onclick=()=>{if(!suppressClick)visit(record.id);};}
    track.append(cell);
@@ -104,7 +106,7 @@ const Dungeon=(()=>{
  viewport.addEventListener('scroll',syncScroll);
  viewport.addEventListener('pointerdown',e=>{
   suppressClick=false;
-  if(records.length<=3||e.pointerType==='touch'||e.button!==0)return;
+  if(visibleRecords().length<=3||e.pointerType==='touch'||e.button!==0)return;
   drag={id:e.pointerId,start:e.clientX,scroll:viewport.scrollLeft,moved:false};
  });
  viewport.addEventListener('pointermove',e=>{
@@ -137,17 +139,20 @@ const Dungeon=(()=>{
  }
  const room=makeRoom();
  function setVariant(variant){
-  if(gameMode!=='prison'||!prisoner||paused||!Laughter.owns(variant)||![0,1,2].includes(variant)||prisoner.bindVariant===variant)return;
+  if(gameMode!=='prison'||!enemySupportsBinding(prisoner,variant)||paused||!Laughter.owns(variant)||prisoner.bindVariant===variant)return;
   prisoner.bindVariant=variant;prisoner.y=bindingY(prisoner);updateMouseFeather(0,true);playBindingVoice(prisoner);savePrisoner();updateControls();canvas.focus();
  }
  function updateControls(){
   if(gameMode!=='prison'||!prisoner)return;
   $('#prison-controls-title').textContent=tr('禁錮魔法');
+  $('#prison-controls').classList.toggle('default-only',newEnemy(prisoner)&&!enemySupportsBinding(prisoner,1));
   document.querySelectorAll('[data-prison-binding]').forEach(button=>{
    const variant=Number(button.dataset.prisonBinding);button.textContent=tr(['預設','木乃伊','藤蔓'][variant]);
-   button.setAttribute('aria-pressed',String(prisoner.bindVariant===variant));button.disabled=paused||!Laughter.owns(variant);button.hidden=!Laughter.owns(variant);
+   button.setAttribute('aria-pressed',String(prisoner.bindVariant===variant));button.disabled=paused||!Laughter.owns(variant)||!enemySupportsBinding(prisoner,variant);button.hidden=!Laughter.owns(variant)||!enemySupportsBinding(prisoner,variant);
   });
-  const outfit=$('#dungeon-wardrobe');outfit.hidden=prisoner.bindVariant!==0;outfit.disabled=paused;
+  const footwear=$('#dungeon-footwear');footwear.hidden=!canCycleFootwear(prisoner);footwear.disabled=paused;if(canCycleFootwear(prisoner))footwear.textContent=footwearButtonText(prisoner);
+  const helmet=$('#dungeon-helmet');helmet.hidden=!canToggleHelmet(prisoner);helmet.disabled=paused;helmet.textContent=helmetButtonText(prisoner);helmet.setAttribute('aria-pressed',String(prisoner.mummyUnhelmet===true));
+  const outfit=$('#dungeon-wardrobe');outfit.hidden=newEnemy(prisoner)||prisoner.bindVariant!==0;outfit.disabled=paused;
   outfit.textContent=tr(prisoner.shirtless?'恢復上衣 · E':'切換無上衣 · E');
   updateBreakGauge();
  }
@@ -161,6 +166,8 @@ const Dungeon=(()=>{
  }
  document.querySelectorAll('[data-prison-binding]').forEach(button=>button.onclick=()=>setVariant(Number(button.dataset.prisonBinding)));
  $('#dungeon-wardrobe').onclick=toggleWardrobe;
+ $('#dungeon-footwear').onclick=cycleMummyFootwear;
+ $('#dungeon-helmet').onclick=toggleMummyHelmet;
  function update(dt){
   time+=dt;if(gameMode==='collection'){for(const p of portraits)portrait(p.canvas,p.record);return;}if(gameMode!=='prison'||!prisoner)return;
   updateMouseFeather(dt);
@@ -177,7 +184,7 @@ const Dungeon=(()=>{
   ctx.clearRect(0,0,960,540);ctx.drawImage(room,0,0,960,540);
   for(const x of [180,780]){ctx.globalAlpha=.06+.025*Math.sin(time*7+x);ctx.fillStyle='#ffc278';ctx.fillRect(x-45,112,90,170);}ctx.globalAlpha=1;
   if(gameMode!=='prison'||!prisoner)return;
-  text(tr('隆'),480,29,16,'#eee0c9','center');
+  text(enemyName(prisoner),480,29,16,'#eee0c9','center');
   drawEnemy(prisoner);
   for(const p of particles){ctx.globalAlpha=Math.min(1,p.life*2);ctx.fillStyle=p.color;ctx.fillRect(p.x-camera,p.y,3,3);}
   for(const t of captions)drawCaption(t);ctx.globalAlpha=1;
@@ -188,5 +195,5 @@ const Dungeon=(()=>{
  $('#dungeon-open').onclick=enter;$('#dungeon-back').onclick=back;
  function refresh(){if(gameMode==='collection')renderGallery();syncUI();}
  syncUI();
- return {capture,enter,back,visit,update,draw,savePrisoner,setVariant,updateControls,addText,spark,refresh,resetProgress,acknowledgeTutorial,get tutorialPending(){return records.length>0&&!guideSeen;},get prisoner(){return prisoner;},get time(){return time;},get count(){return records.length;}};
+ return {capture,enter,back,visit,update,draw,savePrisoner,setVariant,updateControls,addText,spark,refresh,resetProgress,acknowledgeTutorial,get tutorialPending(){return visibleRecords().length>0&&!guideSeen;},get prisoner(){return prisoner;},get time(){return time;},get count(){return visibleRecords().length;}};
 })();

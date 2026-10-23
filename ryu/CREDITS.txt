@@ -1,0 +1,59 @@
+SF III Ryu animation source
+
+Character / game artwork: CAPCOM.
+MUGEN character author: Umihei (SF3_Ryu.def).
+Archive retrieved from: https://github.com/Tatayecorp/demo_mugenJS
+Source revision: 487db4c65971bd7173b621d09dc5c4129433e6ed
+
+Imported from chars/SF3_Ryu/Ryu.sff and CODE/Ryu.air.
+All 1,285 SFF sprite entries and 712 AIR action definitions are preserved in
+the atlas pages and animations.json, including effects and variants.
+The runtime uses a selected set of complete movement and combat sequences,
+with the original pixels, anchors, per-frame timing and hit/hurt boxes.
+The JavaScript AI and magic interaction rules are specific to this game;
+this is not a full emulation of the original MUGEN command/state engine.
+Fourteen unresolved sprite references already exist in source AIR actions
+not used by this game's combat. They are recorded in animations.json.
+The legacy laughter and seated-rest assets remain archived in actors.png but
+are no longer used for Ryu reactions. Normal hit expressions use newly
+generated edits based on SF3 poses; defeat uses original fall/down frames.
+The four-frame purple-ring binding animation is newly generated artwork
+referencing the imported SF3 Ryu appearance; it is not an original CAPCOM
+or Umihei animation.
+
+The repository's software is MIT-licensed; that license is not represented
+as a separate grant for CAPCOM character or game-art rights.
+
+Alternate shirtless costume sheets are newly generated adaptations for all
+255 character sprite references used by runtime clips, plus the binding,
+bound laughter and normal-hit sheets. They preserve the imported action
+timing, collision data and pivot mapping, but are not original CAPCOM or
+Umihei artwork. The wizard melee sheet is newly generated prototype artwork.
+
+Repository license follows:
+
+MIT License
+
+Copyright (c) 2017 Tatayecorp
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+2026-09-17 shirtless restoration: user-authorized gpt-image-2 image edits of existing project sprites. 255 combat frames restored, belts/gi hems removed, alpha extracted before sampling. Original Ryu/CAPCOM provenance remains above. Binding assets receive waist-only patches; pixels outside those patches are preserved. Original backups: assets/shirtless-before-repair. Prompts and generation originals: output/imagegen/shirtless.
+
+2026-09-17 clothed-source remake: replaces ordinary shirtless combat/hit images using edits of ORIGINAL CLOTHED Umihei SF3 Ryu sprites (gpt-image-2, user-authorized API). Original exposed pixel regions restored, source palette/grid retained. No old shirtless combat artwork used as generation input. User-approved binding.png and binding-laugh.png remain byte-identical. Inputs, prompts, masks and outputs: output/imagegen/shirtless-from-clothed.
