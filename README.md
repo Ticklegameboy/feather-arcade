@@ -17,3 +17,5 @@
 素材署名：隆战斗素材 Umihei，来自 [Tatayecorp/demo_mugenJS](https://github.com/Tatayecorp/demo_mugenJS)，原角色和美术 CAPCOM；红战士素材 Chuchoryu。背景与音频署名详见对应目录的 CREDITS.txt。第三方角色及素材权利归原作者所有。
 
 加载改进 r89：显示素材加载进度；下载失败自动重试，单次请求限时 45 秒、最多 3 次；失败时提供重新加载按钮并保留存档。红战士鞋袜和无头盔素材并行加载。可运行 `node tools/verify-loading.cjs` 验证网络故障恢复。
+
+统计接入 r90：访问、开始游戏、游玩时间和加载结果的 GA4 事件已准备。尚未配置衡量 ID，不会收集数据。统计后台通过账号登录查看，详见 [设置说明](ANALYTICS_SETUP.md)。

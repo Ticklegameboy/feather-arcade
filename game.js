@@ -138,7 +138,7 @@ function reset(){
  if(typeof EnemyRoster!=='undefined')EnemyRoster.reset($('#encounter-select')?.value||'ryu');
  enemies=[enemy(690,$('#encounter-select')?.value||'ryu')];shots=[];bindingShots=[];enemyShots=[];effects=[];texts=[];camera=0;kills=0;combo=0;clock=0;world=0;spawnAt=1130;shake=0;
 }
-function start(){if(typeof Onboarding!=='undefined'&&Onboarding.active)return;if(typeof MagicShop!=='undefined'&&MagicShop.isOpen)return;if(!ready||gameMode!=='battle')return;ended=false;reset();running=true;paused=false;unlockGameAudio();$('#overlay').hidden=true;$('#paused').hidden=true;$('#pause').textContent=tr('Ⅱ 暫停');canvas.focus();tone(600,.2);}
+function start(){if(typeof Onboarding!=='undefined'&&Onboarding.active)return;if(typeof MagicShop!=='undefined'&&MagicShop.isOpen)return;if(!ready||gameMode!=='battle')return;ended=false;reset();if(typeof GameAnalytics!=='undefined')GameAnalytics.start(enemies[0]?.kind);running=true;paused=false;unlockGameAudio();$('#overlay').hidden=true;$('#paused').hidden=true;$('#pause').textContent=tr('Ⅱ 暫停');canvas.focus();tone(600,.2);}
 function newGame(){if(!ready||running||gameMode!=='battle')return;Laughter.resetProgress();Dungeon.resetProgress();start();Dungeon.refresh();MagicShop.tick();}
 function pause(){if(typeof Onboarding!=='undefined'&&Onboarding.active)return;if(typeof MagicShop!=='undefined'&&MagicShop.isOpen)return;if(gameMode==='collection'||(!running&&gameMode!=='prison'))return;paused=!paused;$('#paused').hidden=!paused;$('#pause').textContent=paused?tr('▶ 繼續'):tr('Ⅱ 暫停');keys.clear();if(audio){if(paused)audio.suspend().catch(()=>{});else if(sound)audio.resume().catch(()=>{});}}
 function floatText(t,x,y,color='#e9d7ff',style={}){if(gameMode==='prison'){Dungeon.addText(t,x,y,color,style);return;}texts.push({t,x,y,life:1.15,color,...style});}
@@ -692,6 +692,7 @@ function hurtPlayer(amount){
  if(player.hp<=0)gameover();return true;
 }
 function gameover(){
+ if(typeof GameAnalytics!=='undefined')GameAnalytics.end();
  RyuAudio.stopAll();
  ended=true;running=false;keys.clear();$('#overlay').hidden=false;
  $('#overlay h1').innerHTML=tr('魔力需要<br><em>休息一下。</em>');
@@ -1008,7 +1009,8 @@ function frame(t){
  if(typeof CursorTools!=='undefined')CursorTools.tick();
  if(typeof MagicShop!=='undefined')MagicShop.tick();
  syncFeatherMetrics();
- const dt=Math.min((t-last)/1000||0,.1);last=t;
+ const elapsed=(t-last)/1000||0,dt=Math.min(elapsed,.1);last=t;
+ if(typeof GameAnalytics!=='undefined')GameAnalytics.tick(elapsed,(running||gameMode==='prison')&&!paused);
  if((running||gameMode!=='battle')&&!paused){accumulator+=dt;while(accumulator>=1/120&&(running||gameMode!=='battle')&&!paused){update(1/120);accumulator-=1/120;}}else accumulator=0;
  updateMouseFeather(0);canvas.style.cursor=(gameMode==='prison'||gameMode==='battle'&&running)&&!paused?'none':'';draw();updateInteraction();requestAnimationFrame(frame);
 }requestAnimationFrame(frame);

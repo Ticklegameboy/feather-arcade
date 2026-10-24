@@ -1,5 +1,5 @@
 {
-  "version": "r89",
+  "version": "r90",
   "files": [
     {
       "path": "actors.png",
@@ -7,9 +7,19 @@
       "sha256": "b58539b75f01d5da349fa6a7a083d2f94e1ce150d88d6724f35da6ed3d6eb609"
     },
     {
+      "path": "analytics-config.js",
+      "bytes": 179,
+      "sha256": "6ef812420cb27326759c2c869fdb718610f8ad510db36980e3fd8857b0f12991"
+    },
+    {
+      "path": "analytics.js",
+      "bytes": 2358,
+      "sha256": "2b9c9bfa856e52daf044776d94c532e157309605062ef461d1e9cbb25d5d50a7"
+    },
+    {
       "path": "asset-loader.js",
-      "bytes": 2819,
-      "sha256": "a6ea36c821a55e0df928ba15eeca563eff6f6256cb8d0c0a91159ecee640c9bc"
+      "bytes": 2965,
+      "sha256": "49b19240d19d63c30c0d3b1982588bd86e1b9e95bc703e7e113e23f13b813077"
     },
     {
       "path": "background/CREDITS.txt",
@@ -288,8 +298,8 @@
     },
     {
       "path": "game.js",
-      "bytes": 68683,
-      "sha256": "70b82a6b79c90ad2a31a1d3209a127cef290636bf14a0fb0fee0233f66a7b1b9"
+      "bytes": 68945,
+      "sha256": "e3220e76b5d858d74d4ac282214e9a4fcd43d171571b1f4a6387e4e6c137c641"
     },
     {
       "path": "i18n.js",
@@ -298,8 +308,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 9725,
-      "sha256": "934a7f063d0cedce73de78e43cbaf6fdbebfedfee6f51cc85bd895ed911ea482"
+      "bytes": 9860,
+      "sha256": "fd7f6c01643e0ec7b80063526b3cde000ce3ee4bfabb906b2605e0cabdc14dd5"
     },
     {
       "path": "laughter.js",

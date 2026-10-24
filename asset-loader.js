@@ -40,7 +40,7 @@ const AssetLoader=(()=>{
  const ticker=setInterval(render,1000);
  const retry=document.querySelector('#load-retry');if(retry)retry.onclick=()=>location.reload();
  return {json,image,render,state,
-  complete(){state.finished=true;clearInterval(ticker);if(retry)retry.hidden=true;},
-  fail(error){state.error=error;if(!error.assetURL)error.assetURL='';clearInterval(ticker);render();}
+  complete(){if(typeof GameAnalytics!=='undefined')GameAnalytics.loadComplete();state.finished=true;clearInterval(ticker);if(retry)retry.hidden=true;},
+  fail(error){if(typeof GameAnalytics!=='undefined')GameAnalytics.loadFailed(error.assetURL);state.error=error;if(!error.assetURL)error.assetURL='';clearInterval(ticker);render();}
  };
 })();
