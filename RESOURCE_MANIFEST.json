@@ -8,8 +8,8 @@
     },
     {
       "path": "analytics-config.js",
-      "bytes": 179,
-      "sha256": "6ef812420cb27326759c2c869fdb718610f8ad510db36980e3fd8857b0f12991"
+      "bytes": 223,
+      "sha256": "633977042fa4d6c10a5fa12cd48854e039309aa1b9d1150a57c874bd19083bd0"
     },
     {
       "path": "analytics.js",
@@ -308,8 +308,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 9860,
-      "sha256": "fd7f6c01643e0ec7b80063526b3cde000ce3ee4bfabb906b2605e0cabdc14dd5"
+      "bytes": 9864,
+      "sha256": "9c3513c907bc694c4011e3d0e85f8ef79b07eb1b2db35efe25043aeb41d2a65e"
     },
     {
       "path": "laughter.js",
